@@ -1,0 +1,8 @@
+script: mvn clean package
+notifications:
+  email:
+    recipients:
+      - valentin.ah-kane@etu.univ-cotedazur.fr
+      - filipe.costa-de-sousa@etu.univ-cotedazur.fr
+      - romain.garnier@etu.univ-cotedazur.fr
+      - cyril.marilier@etu.univ-cotedazur.fr
