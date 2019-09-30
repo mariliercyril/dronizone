@@ -8,10 +8,10 @@
   <packaging>pom</packaging>
   <modules>
     <module>dronizone-1920-scp-1920-launcher</module>
-    <module>dronizone-warehouse-order</module>
-    <module>dronizone-warehouse-warehouse</module>
-    <module>dronizone-fleet-notification</module>
-    <module>dronizone-fleet-fleet</module>
+    <module>dronizone-order</module>
+    <module>dronizone-warehouse</module>
+    <module>dronizone-notification</module>
+    <module>dronizone-fleet</module>
   </modules>
 
   <properties>

@@ -7,7 +7,7 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>dronizone-fleet-notification</artifactId>
+  <artifactId>dronizone-warehouse</artifactId>
 
   <packaging>jar</packaging>
 </project>
