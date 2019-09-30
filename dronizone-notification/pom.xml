@@ -10,4 +10,25 @@
   <artifactId>dronizone-notification</artifactId>
 
   <packaging>jar</packaging>
+
+  <build>
+    <plugins>
+      <!-- For executing by Maven -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>java</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <mainClass>com.scp.dronizone.warehouse.notification.NotificationService</mainClass>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

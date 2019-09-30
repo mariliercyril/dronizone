@@ -11,15 +11,9 @@
 
   <packaging>jar</packaging>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-  </dependencies>
-
   <build>
     <plugins>
+      <!-- For executing by Maven -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
@@ -32,14 +26,16 @@
           </execution>
         </executions>
         <configuration>
-          <mainClass>engine.services.ApplicationServices</mainClass>
+          <mainClass>com.scp.dronizone.warehouse.WarehouseService</mainClass>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>2.1.8.RELEASE</version>
       </plugin>
     </plugins>
   </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+  </dependencies>
 </project>
