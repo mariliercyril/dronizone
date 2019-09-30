@@ -19,8 +19,6 @@ public class FleetService {
 		client.setDefaultProperties(map);
 
 		client.run(args);
-
-		System.out.println("Fleet Service started...");
 	}
 
 }

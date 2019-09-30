@@ -19,8 +19,6 @@ public class WarehouseService {
 		client.setDefaultProperties(map);
 
 		client.run(args);
-
-		System.out.println("Warehouse Service started...");
 	}
 
 }

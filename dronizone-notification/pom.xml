@@ -26,7 +26,12 @@
           </execution>
         </executions>
         <configuration>
-          <mainClass>com.scp.dronizone.notification.NotificationService</mainClass>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <mainClass>com.scp.dronizone.notification.NotificationService</mainClass>
+            </manifest>
+          </archive>
         </configuration>
       </plugin>
     </plugins>

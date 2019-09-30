@@ -1,24 +1,23 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.1.8.RELEASE</version>
+  </parent>
+
   <groupId>dronizone-1920-scp-1920</groupId>
   <artifactId>dronizone-1920-scp-1920</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 
   <packaging>pom</packaging>
   <modules>
-    <module>dronizone-1920-scp-1920-launcher</module>
     <module>dronizone-order</module>
     <module>dronizone-warehouse</module>
     <module>dronizone-notification</module>
     <module>dronizone-fleet</module>
   </modules>
-
-  <parent>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.1.6.RELEASE</version>
-  </parent>
 
   <properties>
     <!-- For solving the problem of non-integration of the server module into the client package -->
@@ -40,22 +39,17 @@
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
     <testSourceDirectory>src/test/java</testSourceDirectory>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+      </testResource>
+    </testResources>
 
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>exec-maven-plugin</artifactId>
-          <version>1.6.0</version>
-          <configuration>
-            <release>11</release>
-            <skip>true</skip>
-            <mainClass>**undefined**</mainClass>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-    
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
@@ -84,6 +78,11 @@
           <artifactId>junit</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <!-- For Spring Boot to start Web -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
     <!-- For JUnit 5 testing -->
@@ -147,7 +146,6 @@
       <version>${io.cucumber.version}</version>
       <scope>test</scope>
     </dependency>
-
 
     <!-- For logging  -->
     <dependency>

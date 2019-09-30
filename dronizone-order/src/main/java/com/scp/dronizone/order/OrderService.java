@@ -19,8 +19,6 @@ public class OrderService {
 		client.setDefaultProperties(map);
 
 		client.run(args);
-
-		System.out.println("Order Service started...");
 	}
 
 }

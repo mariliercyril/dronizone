@@ -26,7 +26,12 @@
           </execution>
         </executions>
         <configuration>
-          <mainClass>com.scp.dronizone.fleet.FleetService</mainClass>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <mainClass>com.scp.dronizone.fleet.FleetService</mainClass>
+            </manifest>
+          </archive>
         </configuration>
       </plugin>
     </plugins>

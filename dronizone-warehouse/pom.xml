@@ -26,16 +26,14 @@
           </execution>
         </executions>
         <configuration>
-          <mainClass>com.scp.dronizone.warehouse.WarehouseService</mainClass>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <mainClass>com.scp.dronizone.warehouse.WarehouseService</mainClass>
+            </manifest>
+          </archive>
         </configuration>
       </plugin>
     </plugins>
   </build>
-
-  <dependencies>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-  </dependencies>
 </project>

@@ -19,8 +19,6 @@ public class NotificationService {
 		client.setDefaultProperties(map);
 
 		client.run(args);
-
-		System.out.println("Notification Service started...");
 	}
 
 }
