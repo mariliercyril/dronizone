@@ -5,7 +5,14 @@
   <artifactId>dronizone-1920-scp-1920</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
+  <modules>
+    <module>dronizone-1920-scp-1920-launcher</module>
+    <module>dronizone-warehouse-order</module>
+    <module>dronizone-warehouse-warehouse</module>
+    <module>dronizone-fleet-notification</module>
+    <module>dronizone-fleet-fleet</module>
+  </modules>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
