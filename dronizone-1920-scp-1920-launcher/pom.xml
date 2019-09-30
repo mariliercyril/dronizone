@@ -26,7 +26,7 @@
           </execution>
         </executions>
         <configuration>
-          <mainClass>com.scp.dronizone.warehouse.launcher.Launcher</mainClass>
+          <mainClass>com.scp.dronizone.launcher.Launcher</mainClass>
         </configuration>
       </plugin>
     </plugins>
