@@ -1,6 +1,6 @@
 package com.scp.dronizone.common.entity;
 
-import com.scp.dronizone.states.ProcessingState;
+import com.scp.dronizone.common.states.ProcessingState;
 
 import java.util.*;
 
