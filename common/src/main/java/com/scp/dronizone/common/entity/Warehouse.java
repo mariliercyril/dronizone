@@ -1,24 +1,26 @@
 package com.scp.dronizone.common.entity;
 
+import com.scp.dronizone.common.entity.Item;
+import com.scp.dronizone.common.entity.Order;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Warehouse {
-    List<Item> items;
+    static List<Item> items = new ArrayList<>();
 
-    public Warehouse() {
-        items = new ArrayList<>();
+    private Warehouse() {
     }
 
-    public List<Item> getItems() {
+    public static List<Item> getItems() {
         return items;
     }
 
-    public void setItems(List<Item> items) {
-        this.items = items;
+    public static void setItems(List<Item> newItems) {
+        items = newItems;
     }
 
-    public Order createOrder(String itemId) {
+    public static Order createOrder(String itemId) {
         Order newOrder = new Order();
         for (Item item : items) {
             if (item.getIdItem().equals(itemId)) {
@@ -29,8 +31,8 @@ public class Warehouse {
         return newOrder;
     }
 
-    public void addItem(Item newItem) {
-        this.items.add(newItem);
+    public static void addItem(Item newItem) {
+        items.add(newItem);
     }
 
 }

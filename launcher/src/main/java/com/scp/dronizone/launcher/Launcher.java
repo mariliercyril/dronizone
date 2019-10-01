@@ -1,12 +1,16 @@
 package com.scp.dronizone.launcher;
 
+import com.scp.dronizone.common.entity.Item;
+import com.scp.dronizone.common.entity.Order;
+import com.scp.dronizone.common.entity.OrderManager;
+import com.scp.dronizone.common.entity.Warehouse;
 import com.scp.dronizone.fleet.FleetService;
 
 import com.scp.dronizone.notification.NotificationService;
 
 import com.scp.dronizone.order.OrderService;
 
-import com.scp.dronizone.warehouse.WarehouseService;
+import com.scp.dronizone.warehouse.service.WarehouseService;
 
 public class Launcher {
 
@@ -24,7 +28,16 @@ public class Launcher {
 
 		new Launcher();
 
-		System.exit(0);
+		Item myItem = new Item("2");
+		Order myOrder;
+		Warehouse.addItem(myItem);
+		myOrder = Warehouse.createOrder(myItem.getIdItem());
+		OrderManager.addOrder(myOrder);
+
+
+		System.out.println("Finish");
+
+//		System.exit(0);
 	}
 
 }

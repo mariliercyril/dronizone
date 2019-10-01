@@ -1,36 +1,38 @@
 package com.scp.dronizone.common.entity;
 
+import com.scp.dronizone.common.states.ProcessingState;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class OrderManager {
-    List<Order> orders;
+    static List<Order> orders = new ArrayList<>();
 
     public OrderManager() {
-        orders = new ArrayList<>();
     }
 
-    public OrderManager(List<Order> orders) {
-        this.orders = orders;
+    public static List<Order> getUnpackedOrders() {
+        List<Order> unpackedOrders = new ArrayList<>();
+        for(Order order : orders){
+            if(order.processingState.equals(ProcessingState.PENDING))
+                unpackedOrders.add(order);
+        }
+        return unpackedOrders; // TODO check unpackedOrders and return them
     }
 
-    public List<Order> getUnpackedOrders() {
-        return null; // TODO check unpackedOrders and return them
+    public static void setOrderPacked(int idOrder) {
+        orders.get(idOrder).processingState = ProcessingState.PACKED;
     }
 
-    public void setOrderPacked(int idOrder) {
-
+    public static void addOrder(Order newOrder) {
+        orders.add(newOrder);
     }
 
-    public void addOrder(Order newOrder) {
-        this.orders.add(newOrder);
-    }
-
-    public List<Order> getOrders() {
+    public static List<Order> getOrders() {
         return orders;
     }
 
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
+    public static void setOrders(List<Order> myOrders) {
+        orders = myOrders;
     }
 }

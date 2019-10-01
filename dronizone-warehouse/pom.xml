@@ -11,6 +11,15 @@
 
   <packaging>jar</packaging>
 
+  <dependencies>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+          <artifactId>common</artifactId>
+          <version>0.0.1-SNAPSHOT</version>
+          <scope>compile</scope>
+      </dependency>
+  </dependencies>
+
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
     <testSourceDirectory>src/test/java</testSourceDirectory>
@@ -32,7 +41,7 @@
         <artifactId>exec-maven-plugin</artifactId>
         <configuration>
           <skip>false</skip>
-          <mainClass>com.scp.dronizone.warehouse.WarehouseService</mainClass>
+          <mainClass>com.scp.dronizone.warehouse.service.WarehouseService</mainClass>
         </configuration>
       </plugin>
     </plugins>
