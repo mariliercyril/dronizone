@@ -14,7 +14,7 @@ public class NotificationService {
 
 		SpringApplication client = new SpringApplication(NotificationService.class);
 
-		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("server.port", 9003);
 		client.setDefaultProperties(map);
 

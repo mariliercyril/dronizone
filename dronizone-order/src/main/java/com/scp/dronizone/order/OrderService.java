@@ -14,7 +14,7 @@ public class OrderService {
 
 		SpringApplication client = new SpringApplication(OrderService.class);
 
-		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("server.port", 9001);
 		client.setDefaultProperties(map);
 

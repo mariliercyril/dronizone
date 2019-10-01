@@ -14,7 +14,7 @@ public class WarehouseService {
 
 		SpringApplication client = new SpringApplication(WarehouseService.class);
 
-		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("server.port", 9002);
 		client.setDefaultProperties(map);
 

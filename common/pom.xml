@@ -7,7 +7,7 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>dronizone-warehouse</artifactId>
+  <artifactId>common</artifactId>
 
   <packaging>jar</packaging>
 
@@ -24,17 +24,5 @@
         <directory>src/test/resources</directory>
       </testResource>
     </testResources>
-
-    <plugins>
-      <!-- For executing by Maven -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <configuration>
-          <skip>false</skip>
-          <mainClass>com.scp.dronizone.warehouse.WarehouseService</mainClass>
-        </configuration>
-      </plugin>
-    </plugins>
   </build>
 </project>
