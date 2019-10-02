@@ -1,13 +1,11 @@
 package com.scp.dronizone.warehouse.service;
 
+import com.scp.dronizone.common.entity.Item;
 import com.scp.dronizone.common.entity.Order;
 import com.scp.dronizone.common.entity.OrderManager;
 import com.scp.dronizone.common.entity.Warehouse;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -24,8 +22,9 @@ public class WarehouseController {
         return OrderManager.getUnpackedOrders();
     }
 
-    @RequestMapping("pack")
+    @RequestMapping("/pack")
     public void packOrder(@RequestParam(value = "id", required = true) int indexOrder){
         OrderManager.setOrderPacked(indexOrder);
     }
+
 }

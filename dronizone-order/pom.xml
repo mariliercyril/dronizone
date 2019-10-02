@@ -11,6 +11,16 @@
 
   <packaging>jar</packaging>
 
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>common</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../common/target/common-0.0.1-SNAPSHOT.jar</systemPath>
+    </dependency>
+  </dependencies>
+
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
     <testSourceDirectory>src/test/java</testSourceDirectory>
@@ -33,6 +43,16 @@
         <configuration>
           <skip>false</skip>
           <mainClass>com.scp.dronizone.order.OrderService</mainClass>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>com.spotify</groupId>
+        <artifactId>dockerfile-maven-plugin</artifactId>
+        <version>1.4.9</version>
+        <configuration>
+          <repository>${project.groupId}/${project.artifactId}</repository>
+          <tag>${project.version}</tag>
         </configuration>
       </plugin>
     </plugins>
