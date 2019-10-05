@@ -2,11 +2,15 @@ package com.scp.dronizone.common.entity;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * "Fausse" DB de Drones, en attendant mySQL
+ *
+ * tout en static parce que...
  */
 public class DroneManager {
+    public static AtomicInteger counter = new AtomicInteger();
     static HashMap<Integer, Drone> drones = new HashMap<>();
 
     public DroneManager() {
@@ -21,7 +25,7 @@ public class DroneManager {
      * @return {Drone|null}
      *  le Drone recherché ou null s'il n'existe pas dans la "BD" (HashMap)
      */
-    public Drone getDroneById(Integer id) {
+    public static Drone getDroneById(Integer id) {
         return drones.get(id);
     }
 
@@ -31,7 +35,7 @@ public class DroneManager {
      * @return {Collection<Drone>}
      *  L'ensemble de la DB sous forme de collection
      */
-    public Collection<Drone> getAllDrones() {
+    public static Collection<Drone> getAllDrones() {
         return drones.values();
     }
 
@@ -42,8 +46,8 @@ public class DroneManager {
      *  le Drone à ajouter à la BD
      * @throws Exception
      */
-    public void registerNewDrone(Drone drone) throws Exception {
-        if (drones.get(drone.getId()) != null)
+    public static void registerNewDrone(Drone drone) throws Exception {
+        if (drones.get(drone.getId()) == null)
             drones.put(drone.getId(), drone);
         else
             throw new Exception("A drone with the ID #" + drone.getId() + " already exists in the DB.");

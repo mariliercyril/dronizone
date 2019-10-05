@@ -3,20 +3,25 @@ package com.scp.dronizone.common.entity;
 import com.scp.dronizone.common.states.DroneBatteryState;
 import com.scp.dronizone.common.states.DroneState;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.util.concurrent.atomic.AtomicInteger;
 
-@Entity
 public class Drone {
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
     private int id;
 
     private DroneBatteryState batteryState;
 
     private DroneState status;
+
+    public Drone() {
+        this.id = DroneManager.counter.incrementAndGet();
+        this.batteryState = DroneBatteryState.FULL;
+        this.status = DroneState.AVAILABLE;
+    }
+    public Drone(DroneBatteryState batteryLevel, DroneState droneStatus) {
+        this.id = new AtomicInteger().incrementAndGet();
+        this.batteryState = batteryLevel;
+        this.status = droneStatus;
+    }
 
     public Integer getId() {
         return id;
@@ -30,16 +35,16 @@ public class Drone {
         return batteryState;
     }
 
-    public void setBatteryState(DroneBatteryState batteryState) {
-        this.batteryState = batteryState;
+    public void setBatteryState(DroneBatteryState newBatteryState) {
+        this.batteryState = newBatteryState;
     }
 
     public DroneState getStatus() {
         return status;
     }
 
-    public void setStatus(DroneState status) {
-        this.status = status;
+    public void setStatus(DroneState newStatus) {
+        this.status = newStatus;
     }
 
     @Override
