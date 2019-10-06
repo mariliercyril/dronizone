@@ -2,6 +2,7 @@ package com.scp.dronizone.common.entity;
 
 import com.scp.dronizone.common.entity.Item;
 import com.scp.dronizone.common.entity.Order;
+import com.scp.dronizone.common.states.ProcessingState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,8 @@ public class Warehouse {
         for (Item item : items) {
             if (item.getIdItem().equals(itemId)) {
                 newOrder.addItem(item);
+                newOrder.setIdOrder(Integer.toString(OrderManager.getNbOrder()+1));
+                newOrder.processingState = ProcessingState.PENDING;
             }
         }
 

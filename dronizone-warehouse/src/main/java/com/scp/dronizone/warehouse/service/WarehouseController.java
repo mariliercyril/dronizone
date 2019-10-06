@@ -23,8 +23,8 @@ public class WarehouseController {
     }
 
     @RequestMapping("/pack")
-    public void packOrder(@RequestParam(value = "id", required = true) int indexOrder){
-        OrderManager.setOrderPacked(indexOrder);
+    public void packOrder(@RequestParam(value = "id", required = true) String idOrder){
+        OrderManager.setOrderPacked(idOrder);
     }
 
 }

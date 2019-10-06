@@ -20,8 +20,14 @@ public class OrderManager {
         return unpackedOrders; // TODO check unpackedOrders and return them
     }
 
-    public static void setOrderPacked(int idOrder) {
-        orders.get(idOrder).processingState = ProcessingState.PACKED;
+    public static void setOrderPacked(String idOrder) {
+        for (Order order : orders) {
+            if(order.getIdOrder().equals(idOrder)){
+                order.processingState = ProcessingState.PACKED;
+                return;
+            }
+
+        }
     }
 
     public static void addOrder(Order newOrder) {
@@ -38,5 +44,9 @@ public class OrderManager {
 
     public static void setOrders(List<Order> myOrders) {
         orders = myOrders;
+    }
+
+    public static int getNbOrder(){
+        return orders.size();
     }
 }

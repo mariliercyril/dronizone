@@ -12,8 +12,6 @@ public class Order {
     float price;
 
     public Order() {
-        this.idOrder = UUID.randomUUID().toString();
-        this.processingState = ProcessingState.PENDING;
     }
 
     @Override

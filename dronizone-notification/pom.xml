@@ -74,13 +74,25 @@
       <artifactId>lombok</artifactId>
       <optional>true</optional>
     </dependency>
-
+    <!-- For Cucumber testing... -->
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>common</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/../common/target/common-0.0.1-SNAPSHOT.jar</systemPath>
+      <groupId>info.cukes</groupId>
+      <artifactId>cucumber-java</artifactId>
+      <version>${info.cukes.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- For Cucumber testing by JUnit -->
+    <dependency>
+      <groupId>info.cukes</groupId>
+      <artifactId>cucumber-junit</artifactId>
+      <version>${info.cukes.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>info.cukes</groupId>
+      <artifactId>cucumber-picocontainer</artifactId>
+      <version>${info.cukes.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>
