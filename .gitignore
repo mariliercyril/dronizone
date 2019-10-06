@@ -1,0 +1,10 @@
+.git/
+.settings/
+bin/
+target/
+.classpath
+.project
+
+# For IntelliJ IDEA
+.idea
+*.iml
