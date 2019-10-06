@@ -5,6 +5,7 @@
     <groupId>dronizone-1920-scp-1920</groupId>
     <artifactId>dronizone-1920-scp-1920</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>dronizone-notification</artifactId>
@@ -30,11 +31,56 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>java</goal>
+            </goals>
+          </execution>
+        </executions>
         <configuration>
           <skip>false</skip>
           <mainClass>com.scp.dronizone.notification.NotificationService</mainClass>
         </configuration>
       </plugin>
+
+      <!-- For Docker... -->
+      <plugin>
+        <groupId>com.spotify</groupId>
+        <artifactId>dockerfile-maven-plugin</artifactId>
+        <version>1.4.9</version>
+        <configuration>
+          <repository>${project.groupId}/${project.artifactId}</repository>
+          <tag>${project.version}</tag>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
+
+  <dependencies>
+    <!-- For Spring Boot to start data JPA -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+    <!-- For the data persistence (with Hibernate...) -->
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>common</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../common/target/common-0.0.1-SNAPSHOT.jar</systemPath>
+    </dependency>
+  </dependencies>
 </project>
