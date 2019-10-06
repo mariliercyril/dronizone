@@ -35,4 +35,8 @@ public class Warehouse {
         items.add(newItem);
     }
 
+    public static void resetItemList() {
+        items.clear();
+    }
+
 }

@@ -7,10 +7,10 @@ public class Item {
     String idItem;
     float price;
 
-    public Item(float price) {
-        this.idItem = UUID.randomUUID().toString();
-        this.price = price;
-    }
+//    public Item(float price) {
+//        this.idItem = UUID.randomUUID().toString();
+//        this.price = price;
+//    }
 
     public Item(String idItem) {
         this.idItem = idItem;

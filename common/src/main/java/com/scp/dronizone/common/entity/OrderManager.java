@@ -32,6 +32,10 @@ public class OrderManager {
         return orders;
     }
 
+    public static void resetOrders() {
+        orders.clear();
+    }
+
     public static void setOrders(List<Order> myOrders) {
         orders = myOrders;
     }
