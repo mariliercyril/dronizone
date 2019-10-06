@@ -4,7 +4,7 @@ public class Common {
 
 	public static void main(String[] args) {
 
-		System.out.println("Empty...");
+		System.out.println("Common entities (for persistence)...");
 	}
 
 }
