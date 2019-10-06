@@ -49,12 +49,23 @@ public class DroneManager {
      *  le Drone à ajouter à la BD
      * @throws Exception
      */
-    public static void registerNewDrone(Drone drone) throws Exception {
-        if (drones.get(drone.getId()) == null)
+    public static Drone registerNewDrone(Drone drone) throws Exception {
+        if (drones.get(drone.getId()) == null) {
             drones.put(drone.getId(), drone);
+            return drone;
+        }
         else
             throw new Exception("A drone with the ID #" + drone.getId() + " already exists in the DB.");
     }
+
+    /**
+     * Vider la HashMap servant de DB
+     * pour les Tests
+     */
+    public static void resetDrones() {
+        drones.clear();
+    }
+
 
     /**
      * Rappeler tous les Drones actuellement en cours de livraison pour cause urgente (US#5)
