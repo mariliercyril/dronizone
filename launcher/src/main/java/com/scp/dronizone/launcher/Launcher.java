@@ -2,6 +2,7 @@ package com.scp.dronizone.launcher;
 
 import com.scp.dronizone.common.entity.*;
 import com.scp.dronizone.common.states.DroneBatteryState;
+import com.scp.dronizone.common.states.DroneState;
 import com.scp.dronizone.fleet.FleetService;
 
 import com.scp.dronizone.notification.NotificationService;
@@ -44,22 +45,42 @@ public class Launcher {
 		System.out.println(" ========= US#4 ========= ");
 		Drone fullBatteryDrone = new Drone();
 		System.out.println(fullBatteryDrone.toString());
-		System.out.println("Drone #" + fullBatteryDrone.getId() + ", with battery " + fullBatteryDrone.getBatteryState() + ", is being added to the 'DB'.");
-		try {
-			DroneManager.registerNewDrone(fullBatteryDrone);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
 		Drone lowBatteryDrone = new Drone();
 		lowBatteryDrone.setBatteryState(DroneBatteryState.LOW);
 		System.out.println(lowBatteryDrone.toString());
-		System.out.println("Drone #" + lowBatteryDrone.getId() + ", with battery " + lowBatteryDrone.getBatteryState() + ", is being added to the 'DB'.");
+
 		try {
+			System.out.println("Drone #" + fullBatteryDrone.getId() + ", with battery " + fullBatteryDrone.getBatteryState() + ", is being added to the 'DB'.");
+			DroneManager.registerNewDrone(fullBatteryDrone);
+			System.out.println("Drone #" + lowBatteryDrone.getId() + ", with battery " + lowBatteryDrone.getBatteryState() + ", is being added to the 'DB'.");
 			DroneManager.registerNewDrone(lowBatteryDrone);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		Drone deliveringDrone1 = new Drone();
+		deliveringDrone1.setStatus(DroneState.DELIVERING);
+		System.out.println(deliveringDrone1.toString());
+
+		Drone deliveringDrone2 = new Drone();
+		deliveringDrone2.setStatus(DroneState.DELIVERING);
+		System.out.println(deliveringDrone2.toString());
+
+		// User Story 5
+		System.out.println(" ========= US#4 ========= ");
+		try {
+			System.out.println("Drone #" + deliveringDrone1.getId() + ", with battery " + deliveringDrone1.getBatteryState() + ", is being added to the 'DB'.");
+			DroneManager.registerNewDrone(deliveringDrone1);
+			System.out.println("Drone #" + deliveringDrone2.getId() + ", with battery " + deliveringDrone2.getBatteryState() + ", is being added to the 'DB'.");
+			DroneManager.registerNewDrone(deliveringDrone2);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("Starting total recall");
+		DroneManager.recallAllActiveDrones();
+
+		System.out.println(DroneManager.getAllDrones());
 
 
 		System.out.println("Finish");

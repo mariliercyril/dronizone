@@ -1,7 +1,10 @@
 package com.scp.dronizone.common.entity;
 
+import com.scp.dronizone.common.states.DroneState;
+
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -51,5 +54,18 @@ public class DroneManager {
             drones.put(drone.getId(), drone);
         else
             throw new Exception("A drone with the ID #" + drone.getId() + " already exists in the DB.");
+    }
+
+    /**
+     * Rappeler tous les Drones actuellement en cours de livraison pour cause urgente (US#5)
+     *  pour US#5
+     */
+    public static void recallAllActiveDrones() {
+        for (Map.Entry<Integer, Drone> entry : drones.entrySet()) {
+            if (entry.getValue().getStatus() == DroneState.DELIVERING) {
+                entry.getValue().forceRecall(); // une fonction à part car, pour l'US#6, le Drone doit notifier le Client
+                System.out.println("Drone #" + entry.getKey() + " was recalled from its delivery and is now " + entry.getValue().getStatus());
+            }
+        }
     }
 }

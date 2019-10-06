@@ -122,7 +122,6 @@ public class FleetController {
     public @ResponseBody Drone activateDrone(@PathVariable("id") int id) {
         return updateDroneStateAttribute(id, DroneState.AVAILABLE);
     }
-
     /**
      * Change l'état de batterie d'un Drone, s'il existe dans la BD
      *
@@ -145,5 +144,12 @@ public class FleetController {
         } else
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Drone #" + id + " not found");
     }
+
+    @GetMapping(path = "/totalrecall")
+    public @ResponseBody String emergencyRecallAllDeliveringDrones() {
+        DroneManager.recallAllActiveDrones();
+        return "Done."; // 200
+    }
+
 
 }

@@ -47,6 +47,14 @@ public class Drone {
         this.status = newStatus;
     }
 
+    /**
+     * Force le Drone à faire demi tour (US#5)
+     * Fonction à part car cet appel doit notifier le Client aussi (US#6)
+     */
+    public void forceRecall() {
+        this.status = DroneState.RETURNING; // todo le Drone doit, pour l'US#6, réagir à ce
+    }
+
     @Override
     public String toString() {
         return "Drone #" + id
