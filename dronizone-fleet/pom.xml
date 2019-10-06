@@ -5,6 +5,7 @@
     <groupId>dronizone-1920-scp-1920</groupId>
     <artifactId>dronizone-1920-scp-1920</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>dronizone-fleet</artifactId>
@@ -30,6 +31,14 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>java</goal>
+            </goals>
+          </execution>
+        </executions>
         <configuration>
           <skip>false</skip>
           <mainClass>com.scp.dronizone.fleet.FleetService</mainClass>
@@ -37,4 +46,14 @@
       </plugin>
     </plugins>
   </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>common</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../common/target/common-0.0.1-SNAPSHOT.jar</systemPath>
+    </dependency>
+  </dependencies>
 </project>

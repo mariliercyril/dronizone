@@ -13,11 +13,11 @@
     <module>dronizone-warehouse</module>
     <module>dronizone-notification</module>
     <module>dronizone-fleet</module>
-    <module>launcher</module>
   </modules>
 
   <properties>
-    <!-- For solving the problem of non-integration of the server module into the client package -->
+    <!-- For solving the problem of non-integration of the commun module into the packages of other modules -->
+    <!-- Comment for getting a Docker image of a service... -->
     <spring-boot.repackage.skip>true</spring-boot.repackage.skip>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -44,6 +44,7 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>1.2.5.RELEASE</version>
         <executions>
           <execution>
             <goals>
@@ -123,8 +124,6 @@
       <version>2.23.4</version>
       <scope>test</scope>
     </dependency>
-
-
 
     <!-- For logging  -->
     <dependency>
