@@ -53,6 +53,10 @@ public class Order {
         this.price = price;
     }
 
+    public ProcessingState getProcessingState(){
+        return this.processingState;
+    }
+
     public void addItem(Item newItem) {
         items.add(newItem);
         this.price += newItem.getPrice();
