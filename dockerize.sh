@@ -13,6 +13,14 @@ neutral='\033[0;m';
 
 service_name=$1;
 
+exit_command()
+{
+	command=$?;
+	if [ $command -ne 0 ]; then
+		exit $command;
+	fi
+}
+
 dockerize()
 {
 	# For logging in to our Docker account "scp1920"...
@@ -24,7 +32,7 @@ dockerize()
 	chmod +x mvnw
 	# For creating an executable JAR for the service...
 	echo -e "\n\n${bold_magenta}CREATING an executable JAR for the service...${neutral}";
-	./mvnw clean package -DskipTests;
+	./mvnw clean package -DskipTests; exit_command;
 
 	# For testing this JAR...
 	echo -e "\n\n${bold_magenta}TESTING this JAR...${neutral}";
@@ -34,7 +42,7 @@ dockerize()
 
 	# For building the Docker image (of the service) from this JAR...
 	echo -e "\n\n${bold_magenta}BUILDING the Docker image (of the service) from this JAR...${neutral}";
-	./mvnw dockerfile:build;
+	./mvnw dockerfile:build; exit_command;
 
 	# For pushing this Docker image to our Docker repository "dronizone"...
 	echo -e "\n\n${bold_magenta}PUSHING this Docker image to our Docker repository \"dronizone\"...${neutral}";
