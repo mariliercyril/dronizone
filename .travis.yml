@@ -12,6 +12,9 @@ before_install:
 install:
   - docker pull $DOCKER_USERNAME/dronizone:notification
 
+before_script:
+  - mvn clean package -DskipTests
+
 script:
   - cd dronizone-order
   - mvn test
