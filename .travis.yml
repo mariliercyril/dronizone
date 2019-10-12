@@ -26,9 +26,11 @@ before_script:
   - mvn test
   - cd ../dronizone-warehouse
   - mvn test
+  - cd ../dronizone-notification
 
 script:
   - docker run -d -p 9003:9003 -t $DOCKER_USERNAME/dronizone:notification
+  - mvn test
 
 after_script:
   - cd ../dronizone-fleet
