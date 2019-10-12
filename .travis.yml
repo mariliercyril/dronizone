@@ -14,6 +14,7 @@ install:
 
 before_script:
   - mvn clean package -DskipTests
+  - docker run -d -p 9003:9003 -t $DOCKER_USERNAME/dronizone:notification
 
 script:
   - cd dronizone-order
@@ -21,10 +22,9 @@ script:
   - cd ../dronizone-warehouse
   - mvn test
   - cd ../dronizone-notification
-  - docker run -d -p 9003:9003 -t $DOCKER_USERNAME/dronizone:notification
-  - mvn test
-  - cd ../dronizone-fleet
   - mvn clean package
+  - cd ../dronizone-fleet
+  - mvn test
 
 notifications:
   email:
