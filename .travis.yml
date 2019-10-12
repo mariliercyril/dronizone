@@ -1,11 +1,38 @@
-language: java
+sudo: required
 
-sudo: true
+language: java
+env: DOCKER_USERNAME=scp1920
+
+services:
+  - docker
 
 before_install:
   - chmod +x mvnw
+  - ./mvnw clean package -DskipTests
+  - bash docker_login.sh $DOCKER_USERNAME $DOCKER_PASSWORD
+  - cd dronizone-notification
+  - chmod +x mvnw
+  - ./mvnw clean package -DskipTests
+  - java -jar target/dronizone-$service_name-0.0.1-SNAPSHOT.jar &
+  - sleep 10
+  - ./mvnw dockerfile:build
+  - ./mvnw dockerfile:push
 
-script: mvn clean package
+install:
+  - docker pull $DOCKER_USERNAME/dronizone:notification
+
+before_script:
+  - cd dronizone-order
+  - mvn test
+  - cd ../dronizone-warehouse
+  - mvn test
+
+script:
+  - docker run -d -p 9003:9003 -t $DOCKER_USERNAME/dronizone:notification
+
+after_script:
+  - cd ../dronizone-fleet
+  - mvn clean package
 
 notifications:
   email:

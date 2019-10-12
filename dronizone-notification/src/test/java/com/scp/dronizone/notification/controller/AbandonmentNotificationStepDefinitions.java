@@ -32,16 +32,16 @@ public class AbandonmentNotificationStepDefinitions extends NotificationControll
 		//customerRepository.save(customer);
 	}
 
-	@When("the drone assigned to deliver my order \"([^\"]*)\" is no longer able to fulfill its mission")
-	public void the_drone_assigned_to_deliver_my_order_is_no_longer_able_to_fulfill_its_mission(String idOrder) {
+	@When("the drone assigned to deliver my order (\\d+) is no longer able to fulfill its mission")
+	public void the_drone_assigned_to_deliver_my_order_is_no_longer_able_to_fulfill_its_mission(Integer idOrder) {
 
-		customerOrder = new CustomerOrder(idOrder, customer);
+		customerOrder = new CustomerOrder(String.valueOf(idOrder), customer);
 
 		//customerOrderRepository.save(customerOrder);
 	}
 
-	@Then("it notifies me that my order \"([^\"]*)\" will no longer be delivered")
-	public void it_notifies_me_that_my_order_will_no_longer_be_delivered(int idOrder) {
+	@Then("it notifies me that my order (\\d+) will no longer be delivered")
+	public void it_notifies_me_that_my_order_will_no_longer_be_delivered(Integer idOrder) {
 
 		String notification = String.format(NOTIFICATION_FORMAT, idOrder);
 
