@@ -7,32 +7,19 @@ services:
   - docker
 
 before_install:
-  - chmod +x mvnw
-  - ./mvnw clean package -DskipTests
   - bash docker_login.sh $DOCKER_USERNAME $DOCKER_PASSWORD
-  - cd dronizone-notification
-  - chmod +x mvnw
-  - ./mvnw clean package -DskipTests
-  - java -jar target/dronizone-notification-0.0.1-SNAPSHOT.jar &
-  - sleep 10
-  - ./mvnw dockerfile:build
-  - ./mvnw dockerfile:push
 
 install:
   - docker pull $DOCKER_USERNAME/dronizone:notification
 
-before_script:
-  - cd ../dronizone-order
+script:
+  - cd dronizone-order
   - mvn test
   - cd ../dronizone-warehouse
   - mvn test
   - cd ../dronizone-notification
-
-script:
   - docker run -d -p 9003:9003 -t $DOCKER_USERNAME/dronizone:notification
   - mvn test
-
-after_script:
   - cd ../dronizone-fleet
   - mvn clean package
 
@@ -43,3 +30,4 @@ notifications:
       - filipe.costa-de-sousa@etu.univ-cotedazur.fr
       - romain.garnier@etu.univ-cotedazur.fr
       - cyril.marilier@etu.univ-cotedazur.fr
+
