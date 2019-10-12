@@ -1,10 +1,9 @@
 package com.scp.dronizone.cucumber;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.scp.dronizone.common.entity.Item;
-import com.scp.dronizone.common.entity.Order;
-import com.scp.dronizone.common.entity.OrderManager;
-import com.scp.dronizone.common.entity.Warehouse;
+import com.scp.dronizone.order.entity.Item;
+import com.scp.dronizone.order.entity.Order;
+import com.scp.dronizone.order.entity.OrderManager;
+import com.scp.dronizone.order.entity.Warehouse;
 import com.scp.dronizone.order.OrderController;
 import com.scp.dronizone.order.OrderService;
 import cucumber.api.java.en.Given;
@@ -17,7 +16,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.junit.Before;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertEquals;
 
 import java.io.InputStream;
@@ -26,7 +24,6 @@ import java.util.Scanner;
 
 public class StepsDefinition {
     OrderController orderController = new OrderController();
-    WireMockServer wireMockServer = new WireMockServer(9876);
     CloseableHttpClient httpClient = HttpClients.createDefault();
     boolean setupDone = false;
 
@@ -34,11 +31,6 @@ public class StepsDefinition {
     public void setUp() {
         Warehouse.resetItemList();
         OrderManager.resetOrders();
-        if (!setupDone) {
-            setupDone = true;
-            wireMockServer.start();
-
-        }
     }
 
     @Given("^: an item with id (\\w+) in the warehouse$")
@@ -74,9 +66,6 @@ public class StepsDefinition {
         String responseString = scanner.useDelimiter("\\Z").next();
 
         System.out.println(responseString);
-
-        orderController.createOrder(itemId);
-
     }
 
     @Then("^: a new order with the item (\\w+) has been added$")

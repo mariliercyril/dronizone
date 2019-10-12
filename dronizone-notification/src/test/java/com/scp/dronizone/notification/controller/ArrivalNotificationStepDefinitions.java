@@ -33,16 +33,16 @@ public class ArrivalNotificationStepDefinitions extends NotificationControllerTe
 		//customerRepository.save(customer);
 	}
 
-	@When("the drone delivering my order (\\d+) will arrive shortly")
-	public void the_drone_delivering_my_order_will_arrive_shortly(Integer idOrder) {
+	@When("the drone delivering my order \"([^\"]*)\" will arrive shortly")
+	public void the_drone_delivering_my_order_will_arrive_shortly(String idOrder) {
 
-		customerOrder = new CustomerOrder(String.valueOf(idOrder), customer);
+		customerOrder = new CustomerOrder(idOrder, customer);
 
 		//customerOrderRepository.save(customerOrder);
 	}
 
-	@Then("it notifies me that my order (\\d+) vill be delivered at my address")
-	public void it_notifies_me_that_my_order_vill_be_delivered_at_my_address(Integer idOrder) {
+	@Then("it notifies me that my order \"([^\"]*)\" vill be delivered at my address")
+	public void it_notifies_me_that_my_order_vill_be_delivered_at_my_address(String idOrder) {
 
 		//String customerAddress = ((customerOrderRepository.getOne(String.valueOf(idOrder))).getCustomer()).getAddress();
 		String customerAddress = customer.getAddress();

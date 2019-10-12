@@ -20,8 +20,8 @@ import com.scp.dronizone.notification.dao.entity.CustomerRepository;
  * 
  * @author cmarilier
  */
-@ContextConfiguration(classes=NotificationService.class)
-@SpringBootTest
+//@ContextConfiguration(classes=NotificationService.class)
+//@SpringBootTest
 public class NotificationControllerTest {
 
 	private static final String NOTIFICATION_SERVICE_URL = "http://localhost:9003/drone/delivery/notification";

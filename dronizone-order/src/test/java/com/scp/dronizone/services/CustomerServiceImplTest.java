@@ -1,8 +1,8 @@
 package com.scp.dronizone.services;
 
-import com.scp.dronizone.common.entity.Item;
-import com.scp.dronizone.common.entity.OrderManager;
-import com.scp.dronizone.common.entity.Warehouse;
+import com.scp.dronizone.order.entity.Item;
+import com.scp.dronizone.order.entity.OrderManager;
+import com.scp.dronizone.order.entity.Warehouse;
 import com.scp.dronizone.order.OrderController;
 
 import static org.junit.Assert.*;

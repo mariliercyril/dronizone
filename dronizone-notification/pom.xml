@@ -13,6 +13,7 @@
 
   <properties>
     <docker.image.prefix>scp1920</docker.image.prefix>
+    <cucumber.version>4.2.0</cucumber.version>
   </properties>
 
   <build>
@@ -119,22 +120,22 @@
 
 	<!-- For Cucumber testing... -->
     <dependency>
-      <groupId>info.cukes</groupId>
+      <groupId>io.cucumber</groupId>
       <artifactId>cucumber-java</artifactId>
-      <version>${info.cukes.version}</version>
+      <version>${cucumber.version}</version>
       <scope>test</scope>
     </dependency>
-    <!-- For Cucumber testing by JUnit -->
+
     <dependency>
-      <groupId>info.cukes</groupId>
+      <groupId>io.cucumber</groupId>
       <artifactId>cucumber-junit</artifactId>
-      <version>${info.cukes.version}</version>
+      <version>${cucumber.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>info.cukes</groupId>
-      <artifactId>cucumber-picocontainer</artifactId>
-      <version>${info.cukes.version}</version>
+      <groupId>io.cucumber</groupId>
+      <artifactId>cucumber-spring</artifactId>
+      <version>${cucumber.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

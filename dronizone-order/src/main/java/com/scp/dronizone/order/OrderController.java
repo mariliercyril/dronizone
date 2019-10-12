@@ -1,9 +1,9 @@
 package com.scp.dronizone.order;
 
-import com.scp.dronizone.common.entity.Item;
-import com.scp.dronizone.common.entity.Order;
-import com.scp.dronizone.common.entity.OrderManager;
-import com.scp.dronizone.common.entity.Warehouse;
+import com.scp.dronizone.order.entity.Item;
+import com.scp.dronizone.order.entity.Order;
+import com.scp.dronizone.order.entity.OrderManager;
+import com.scp.dronizone.order.entity.Warehouse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
