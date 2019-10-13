@@ -36,7 +36,7 @@ public class PackingOrderSeptDefs {
     @Then("^: The server will respond with (\\d+) order with id (\\d+)$")
     public void a_new_order_with_the_item_has_been_added(int nbOrder, int idOrder) throws Exception {
         assertEquals(orders.size(),nbOrder);
-        assertEquals(orders.get(0).getIdOrder(),idOrder);
+        assertEquals(orders.get(0).getId(),idOrder);
     }
 
 
