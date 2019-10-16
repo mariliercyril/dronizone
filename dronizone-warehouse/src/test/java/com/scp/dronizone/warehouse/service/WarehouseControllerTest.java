@@ -1,10 +1,8 @@
 package com.scp.dronizone.warehouse.service;
 
-import com.scp.dronizone.common.entity.Item;
-import com.scp.dronizone.common.entity.Order;
-import com.scp.dronizone.common.entity.OrderManager;
-import com.scp.dronizone.common.entity.Warehouse;
-import com.scp.dronizone.common.states.ProcessingState;
+import com.scp.dronizone.warehouse.entity.Order;
+import com.scp.dronizone.warehouse.entity.OrderManager;
+import com.scp.dronizone.warehouse.states.ProcessingState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
@@ -19,21 +17,17 @@ import static org.mockito.Mockito.spy;
 @RunWith(JUnitPlatform.class)
 class WarehouseControllerTest {
     WarehouseController warehouseService;
-    Item item;
     Order order;
 
     @BeforeEach
     void setUp() {
 
-        Warehouse.resetItemList();
         OrderManager.resetOrders();
 
         warehouseService = new WarehouseController();
 
-        item = new Item("125");
-        Warehouse.addItem(item);
 
-        order = Warehouse.createOrder(item.getIdItem());
+        order = new Order(1);
         OrderManager.addOrder(order);
     }
 
@@ -48,8 +42,8 @@ class WarehouseControllerTest {
 
     @Test
     void packOrder() {
-        warehouseService.packOrder(order.getIdOrder());
+        warehouseService.packOrder(order.getId());
 
-        assertEquals(order.getProcessingState(),ProcessingState.PACKED);
+        assertEquals(order.getProcessingState(), ProcessingState.PACKED);
     }
 }
