@@ -19,10 +19,8 @@ before_script:
 script:
   - cd dronizone-order
   - mvn test
-  - cd ../dronizone-warehouse
-  - mvn test
   - cd ../dronizone-notification
-  - mvn clean package
+  - mvn test
   - cd ../dronizone-fleet
   - mvn test
 

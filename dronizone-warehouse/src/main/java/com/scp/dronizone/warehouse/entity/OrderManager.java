@@ -24,13 +24,14 @@ public class OrderManager {
         return unpackedOrders; // TODO check unpackedOrders and return them
     }
 
-    public static void setOrderPacked(int idOrder) {
+    public static Order setOrderPacked(int idOrder) {
         for (Order order : orders) {
             if(order.getId() == idOrder){
                 order.setProcessingState(ProcessingState.PACKED);
-                return;
+                return order;
             }
         }
+        return null;
     }
 
     public static void addOrder(Order newOrder) {
