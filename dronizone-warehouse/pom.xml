@@ -91,10 +91,10 @@
         <groupId>com.spotify</groupId>
         <artifactId>dockerfile-maven-plugin</artifactId>
         <version>1.4.9</version>
-        <configuration>
-          <repository>${project.groupId}/${project.artifactId}</repository>
-          <tag>${project.version}</tag>
-        </configuration>
+          <configuration>
+              <repository>scp1920/dronizone</repository>
+              <tag>warehouse</tag>
+          </configuration>
       </plugin>
     </plugins>
   </build>
