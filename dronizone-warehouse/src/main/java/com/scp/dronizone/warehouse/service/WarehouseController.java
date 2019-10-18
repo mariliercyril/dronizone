@@ -39,7 +39,7 @@ public class WarehouseController {
 
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<Integer> request = new HttpEntity<Integer>(idOrder);
-        ResponseEntity<String> response = restTemplate.exchange("http://localhost:" + 9004 + "/fleet/assign", HttpMethod.POST, request, String.class);
+        ResponseEntity<String> response = restTemplate.exchange("http://fleet:" + 9004 + "/fleet/assign", HttpMethod.POST, request, String.class);
 
         return "OK";
     }
