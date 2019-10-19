@@ -1,11 +1,7 @@
 package com.scp.dronizone.warehouse.cucumber;
 
-
-
-import com.scp.dronizone.common.entity.Item;
-import com.scp.dronizone.common.entity.Order;
-import com.scp.dronizone.common.entity.OrderManager;
-import com.scp.dronizone.common.entity.Warehouse;
+import com.scp.dronizone.warehouse.entity.Order;
+import com.scp.dronizone.warehouse.entity.OrderManager;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -20,21 +16,12 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class PackingOrderSeptDefs {
-    Item item;
     Order order;
     List<Order> orders;
 
-    @Given("^an item with id \"([^\"]*)\" in the warehouse$")
-    public void an_item_with_id_in_the_warehouse(String itemId) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        item = new Item(itemId);
-        Warehouse.addItem(item);
-
-    }
-
-    @Given("^an order with id \"([^\"]*)\"$")
-    public void an_order_with_id(String idOrder) throws Exception {
-        order = Warehouse.createOrder(item.getIdItem());
+    @Given("^an order with id (\\d+)$")
+    public void an_order_with_id(int idOrder) throws Exception {
+        order = new Order(idOrder);
         OrderManager.addOrder(order);
     }
 
@@ -46,10 +33,10 @@ public class PackingOrderSeptDefs {
 
     }
 
-    @Then("^: The server will respond with (\\d+) order with id \"([^\"]*)\"$")
-    public void a_new_order_with_the_item_has_been_added(int nbOrder, String idOrder) throws Exception {
+    @Then("^: The server will respond with (\\d+) order with id (\\d+)$")
+    public void a_new_order_with_the_item_has_been_added(int nbOrder, int idOrder) throws Exception {
         assertEquals(orders.size(),nbOrder);
-        assertEquals(orders.get(0).getIdOrder(),idOrder);
+        assertEquals(orders.get(0).getId(),idOrder);
     }
 
 

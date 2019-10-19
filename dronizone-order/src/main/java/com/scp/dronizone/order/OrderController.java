@@ -24,7 +24,7 @@ import java.util.Collection;
 import java.util.List;
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/orders")
 public class OrderController {
     private static final Logger LOG = LoggerFactory.getLogger(OrderController.class);
 
@@ -72,5 +72,24 @@ public class OrderController {
         Order newOrder = Warehouse.createOrder(itemId);
         OrderManager.addOrder(newOrder);
         return newOrder;
+    }
+
+    @PostMapping("/")
+    public Order createOrder(@RequestBody Order order){
+        LOG.warn("GET Request on /order/create with parameter : " + order.getIdOrder());
+        OrderManager.addOrder(order);
+        return order;
+    }
+
+    @PutMapping("/{id}")
+    public Order updateOrder(@RequestBody Order order, @PathVariable Integer id){
+        LOG.warn("GET Request on /order/create with parameter : " + order.getIdOrder());
+        OrderManager.addOrder(order);
+        return order;
+    }
+
+    @GetMapping("/")
+    public List<Order> getOrders() {
+        return OrderManager.getOrders();
     }
 }

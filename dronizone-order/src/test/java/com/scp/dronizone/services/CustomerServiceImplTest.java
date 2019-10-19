@@ -1,6 +1,7 @@
 package com.scp.dronizone.services;
 
 import com.scp.dronizone.order.entity.Item;
+import com.scp.dronizone.order.entity.Order;
 import com.scp.dronizone.order.entity.OrderManager;
 import com.scp.dronizone.order.entity.Warehouse;
 import com.scp.dronizone.order.OrderController;
@@ -36,7 +37,9 @@ public class CustomerServiceImplTest {
 
     @org.junit.Test
     public void orderItem() {
-        customerService.createOrder("125");
+        Order order = new Order();
+        order.addItem(new Item("125"));
+        customerService.createOrder(order);
         assertEquals(1, OrderManager.getOrders().size());
     }
 }
