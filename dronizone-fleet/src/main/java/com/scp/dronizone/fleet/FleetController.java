@@ -1,9 +1,9 @@
 package com.scp.dronizone.fleet;
 
-import com.scp.dronizone.common.entity.Drone;
-import com.scp.dronizone.common.entity.DroneManager;
-import com.scp.dronizone.common.states.DroneBatteryState;
-import com.scp.dronizone.common.states.DroneState;
+import com.scp.dronizone.fleet.entity.Drone;
+import com.scp.dronizone.fleet.entity.DroneManager;
+import com.scp.dronizone.fleet.states.DroneBatteryState;
+import com.scp.dronizone.fleet.states.DroneState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ public class FleetController {
      *  OK string
      */
     @RequestMapping({"", "/", "/connected"})
-    public String connected(HttpServletRequest request) {
+    public String home(HttpServletRequest request) {
         LOG.warn("Request on " + request.getRequestURI() + "?" + request.getQueryString());
         return "Connected !";
     }
@@ -41,8 +41,9 @@ public class FleetController {
      * @return {JSON/Drone}
      *  Le Drone, s'il existe, au format JSON
      */
-    @GetMapping(path = "/{id}")
-    public @ResponseBody Drone getDroneById(@PathVariable("id") int id, HttpServletRequest request) {
+    @GetMapping(path = "/drones/{id}")
+    public @ResponseBody
+    Drone getDroneById(@PathVariable("id") int id, HttpServletRequest request) {
         LOG.warn("Request on " + request.getRequestURI() + "?" + request.getQueryString());
         LOG.info("Trying to retrieve the Drone with ID: " + id + " from the DB...");
         Drone zeDrone = DroneManager.getDroneById(id);
@@ -62,8 +63,9 @@ public class FleetController {
      * @return {DroneBatteryState|null}
      *  le niveau de Battery du Drone recherché ou null s'il n'existe pas dans la "BD" (HashMap)
      */
-    @GetMapping(path = "/{id}/battery")
-    public @ResponseBody DroneBatteryState getDroneBatteryById(@PathVariable("id") int id, HttpServletRequest request) {
+    @GetMapping(path = "/drones/{id}/battery")
+    public @ResponseBody
+    DroneBatteryState getDroneBatteryById(@PathVariable("id") int id, HttpServletRequest request) {
         LOG.warn("Request on " + request.getRequestURI() + "?" + request.getQueryString());
         LOG.info("Trying to retrieve the Drone with ID: " + id + "'s battery status from the DB...");
         Drone zeDrone = DroneManager.getDroneById(id);
@@ -80,7 +82,7 @@ public class FleetController {
      * @return {Collection<Drone>}
      *  L'ensemble de la DB sous forme de collection, JSON Array par défaut
      */
-    @GetMapping(path = "/all")
+    @GetMapping(path = "/drones")
     public @ResponseBody Iterable<Drone> getAllDrones(HttpServletRequest request) {
         LOG.warn("Request on " + request.getRequestURI() + "?" + request.getQueryString());
         return DroneManager.getAllDrones();
@@ -98,13 +100,15 @@ public class FleetController {
      *
      * @return {Drone} le Drone
      */
-    @GetMapping(path = "/{id}/deactivate")
-    public @ResponseBody Drone deactivateDrone(@PathVariable("id") int id, HttpServletRequest request) {
+    @GetMapping(path = "/drones/{id}/deactivate")
+    public @ResponseBody
+    Drone deactivateDrone(@PathVariable("id") int id, HttpServletRequest request) {
         LOG.warn("Request on " + request.getRequestURI() + "?" + request.getQueryString());
         return updateDroneStateAttribute(id, DroneState.RECHARGING);
     }
-    @GetMapping(path = "/{id}/activate")
-    public @ResponseBody Drone activateDrone(@PathVariable("id") int id, HttpServletRequest request) {
+    @GetMapping(path = "/drones/{id}/activate")
+    public @ResponseBody
+    Drone activateDrone(@PathVariable("id") int id, HttpServletRequest request) {
         LOG.warn("Request on " + request.getRequestURI() + "?" + request.getQueryString());
         return updateDroneStateAttribute(id, DroneState.AVAILABLE);
     }
@@ -131,7 +135,7 @@ public class FleetController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Drone #" + id + " not found");
     }
 
-    @GetMapping(path = "/totalrecall")
+    @GetMapping(path = "/drones/totalrecall")
     public @ResponseBody String emergencyRecallAllDeliveringDrones(HttpServletRequest request) {
         LOG.warn("Request on " + request.getRequestURI() + "?" + request.getQueryString());
         DroneManager.recallAllActiveDrones();
@@ -141,18 +145,22 @@ public class FleetController {
     /**
      * Ajouter un nouveau Drone à la HashMap
      *
-     * @param {Drone} droneToAdd
+     * @param {Drone} drone
      *  le Drone a ajouter
+     *
+     * @param {HttpServletRequest} request
+     *
      * @return {Drone}
      *  le Drone ajouté
      */
-    @PostMapping("/new")
-    // il faut enlever @RequestBody pour que le test, avec CloseableHttpClient, passe
-    // --> https://stackoverflow.com/questions/33796218/content-type-application-x-www-form-urlencodedcharset-utf-8-not-supported-for
-    public @ResponseBody Drone addNewDrone(/*@RequestBody */Drone droneToAdd, HttpServletRequest request) {
-        LOG.warn("Request on " + request.getRequestURI() + "?" + request.getQueryString());
+    @PostMapping("/drones")
+    public @ResponseBody
+    Drone addNewDrone(@RequestBody Drone drone, HttpServletRequest request) throws Exception {
+        LOG.info("Request on " + request.getRequestURI() + "?" + request.getQueryString());
+        LOG.info("Trying to add\n" + drone.toString());
+
         try {
-            return DroneManager.registerNewDrone(droneToAdd);
+            return DroneManager.registerNewDrone(drone);
         } catch (Exception e) {
             LOG.error(e.toString());
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
@@ -166,10 +174,39 @@ public class FleetController {
      * @return
      *  la HashMap (sera donc un Array vide, servant de "preuve")
      */
-    @RequestMapping ("/reset")
+    @RequestMapping ("/drones/reset")
     public @ResponseBody Iterable<Drone> removeAllDrones(HttpServletRequest request) {
         LOG.warn("Request on " + request.getRequestURI() + "?" + request.getQueryString());
         DroneManager.resetDrones();
         return DroneManager.getAllDrones();
+    }
+
+    // TODO ajouter une route pour PUT un Array de Drone --> remplacer la base
+    @RequestMapping(path = "/drones", method = RequestMethod.PUT)
+    public @ResponseBody Iterable<Drone> setWholeDroneDatabase(@RequestBody Iterable<Drone> drones, HttpServletRequest request) {
+        LOG.warn("\nRequest on " + request.getRequestURI() + "?" + request.getQueryString());
+        LOG.warn("\nRequestBody:");
+        for (Drone drone: drones) {
+            LOG.info("\n" + drone.toString());
+        }
+
+        LOG.warn("\n\nString.valueOf(drones)");
+        LOG.warn(String.valueOf(drones));
+
+        // Il faut impérativement passer le bon type, aka HashMap<int, Drone>
+        return DroneManager.setAllDrones(drones);
+    }
+
+    /**
+     * Echo/Marco-Polo
+     * Renvoie l'Objet reçu
+     * pour debug
+     * @// TODO: 18/10/2019 supprimer
+     * @param received Le message reçu
+     * @return {Object}
+     */
+    @RequestMapping(path = "/marco")
+    public @ResponseBody Object polo(@RequestBody Object received) {
+        return received;
     }
 }

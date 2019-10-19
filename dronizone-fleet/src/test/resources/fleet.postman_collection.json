@@ -1,0 +1,493 @@
+{
+	"info": {
+		"_postman_id": "024d5de5-d841-445b-b9cb-61464e3f86ef",
+		"name": "fleet",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "PUT collection COLLECTION",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "300f738e-0c51-4597-a8ea-aead2746d67e",
+						"exec": [
+							"function D () {",
+							"    var randomD = {};",
+							"    let enumBattery = [\"FULL\", \"OK\", \"LOW\"];",
+							"    let enumStates = [\"AVAILABLE\", \"RECHARGING\", \"DELIVERING\", \"RETURNING\"];",
+							"    ",
+							"    randomD.id = Math.floor(Math.random() * 2000);",
+							"    randomD.batteryState = enumBattery[Math.floor(Math.random() * enumBattery.length)];",
+							"    randomD.status = enumStates[Math.floor(Math.random() * enumStates.length)];",
+							"    ",
+							"    return randomD;",
+							"}",
+							"",
+							"/*",
+							"function randomId() {",
+							"    return parseInt(new Date().getSeconds() + \"\" + new Date().getMilliseconds()); // le script gen tout dans la même MS...",
+							"}",
+							"function randomBattery() {",
+							"    let enumBattery = [\"FULL\", \"OK\", \"LOW\"];",
+							"    return enumBattery[Math.floor(Math.random() * enumBattery.length)];",
+							"}",
+							"function randomState() {",
+							"    let enumStates = [\"AVAILABLE\", \"RECHARGING\", \"DELIVERING\", \"RETURNING\"];",
+							"    return enumStates[Math.floor(Math.random() * enumStates.length)];",
+							"} //*/",
+							"",
+							"",
+							"",
+							"var arrD = [];",
+							"",
+							"// générer 5 random D",
+							"for (let i=0, l=5; i<5; ++i) {",
+							"    arrD.push(D());",
+							"}",
+							"",
+							"var collD = {};",
+							"for (let d of arrD) {",
+							"    collD[d.id] = d;",
+							"}",
+							"",
+							"// stocker",
+							"postman.setEnvironmentVariable(\"arrD\", JSON.stringify((arrD)));",
+							"postman.setEnvironmentVariable(\"collD\", JSON.stringify((collD)));",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{{collD}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9004/fleet/drones",
+					"host": [
+						"localhost"
+					],
+					"port": "9004",
+					"path": [
+						"fleet",
+						"drones"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET all",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:9004/fleet/drones",
+					"host": [
+						"localhost"
+					],
+					"port": "9004",
+					"path": [
+						"fleet",
+						"drones"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST newD",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "77ee18dd-aeb7-404f-9d26-3b31b78249dd",
+						"exec": [
+							"function D () {",
+							"    var randomD = {};",
+							"    let enumBattery = [\"FULL\", \"OK\", \"LOW\"];",
+							"    let enumStates = [\"AVAILABLE\", \"RECHARGING\", \"DELIVERING\", \"RETURNING\"];",
+							"    ",
+							"    randomD.id = parseInt(new Date().getSeconds() + \"\" + new Date().getMilliseconds());",
+							"    randomD.batteryState = enumBattery[Math.floor(Math.random() * enumBattery.length)];",
+							"    randomD.status = enumStates[Math.floor(Math.random() * enumStates.length)];",
+							"    ",
+							"    return randomD;",
+							"}",
+							"",
+							"// Save globally",
+							"postman.setEnvironmentVariable(\"D\", D);",
+							"",
+							"// let myD = D();",
+							"var parsedFunc = eval(\"(\" + environment.D +\")\");",
+							"var myD = parsedFunc();",
+							" ",
+							"postman.setEnvironmentVariable(\"randomD\", JSON.stringify((myD)));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{{randomD}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9004/fleet/drones",
+					"host": [
+						"localhost"
+					],
+					"port": "9004",
+					"path": [
+						"fleet",
+						"drones"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "marco polo",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "a05cd7dd-7a7e-4c78-b71f-86425965939f",
+						"exec": [
+							"function D () {",
+							"    var randomD = {};",
+							"    let enumBattery = [\"FULL\", \"OK\", \"LOW\"];",
+							"    let enumStates = [\"AVAILABLE\", \"RECHARGING\", \"DELIVERING\", \"RETURNING\"];",
+							"    ",
+							"    randomD.id = Math.floor(Math.random() * 2000);",
+							"    randomD.batteryState = enumBattery[Math.floor(Math.random() * enumBattery.length)];",
+							"    randomD.status = enumStates[Math.floor(Math.random() * enumStates.length)];",
+							"    ",
+							"    return randomD;",
+							"}",
+							"",
+							"/*",
+							"function randomId() {",
+							"    return parseInt(new Date().getSeconds() + \"\" + new Date().getMilliseconds()); // le script gen tout dans la même MS...",
+							"}",
+							"function randomBattery() {",
+							"    let enumBattery = [\"FULL\", \"OK\", \"LOW\"];",
+							"    return enumBattery[Math.floor(Math.random() * enumBattery.length)];",
+							"}",
+							"function randomState() {",
+							"    let enumStates = [\"AVAILABLE\", \"RECHARGING\", \"DELIVERING\", \"RETURNING\"];",
+							"    return enumStates[Math.floor(Math.random() * enumStates.length)];",
+							"} //*/",
+							"",
+							"",
+							"",
+							"var arrD = [];",
+							"",
+							"// générer 5 random D",
+							"for (let i=0, l=5; i<5; ++i) {",
+							"    arrD.push(D());",
+							"}",
+							"",
+							"var collD = {};",
+							"for (let d of arrD) {",
+							"    collD[d.id] = d;",
+							"}",
+							"",
+							"// stocker",
+							"postman.setEnvironmentVariable(\"arrD\", JSON.stringify((arrD)));",
+							"postman.setEnvironmentVariable(\"collD\", JSON.stringify((collD)));",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n\t{{arrD}},\n\t{{collD}}\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9004/fleet/marco",
+					"host": [
+						"localhost"
+					],
+					"port": "9004",
+					"path": [
+						"fleet",
+						"marco"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT collection ARRAY",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "300f738e-0c51-4597-a8ea-aead2746d67e",
+						"exec": [
+							"function D () {",
+							"    var randomD = {};",
+							"    let enumBattery = [\"FULL\", \"OK\", \"LOW\"];",
+							"    let enumStates = [\"AVAILABLE\", \"RECHARGING\", \"DELIVERING\", \"RETURNING\"];",
+							"    ",
+							"    randomD.id = Math.floor(Math.random() * 2000);",
+							"    randomD.batteryState = enumBattery[Math.floor(Math.random() * enumBattery.length)];",
+							"    randomD.status = enumStates[Math.floor(Math.random() * enumStates.length)];",
+							"    ",
+							"    return randomD;",
+							"}",
+							"",
+							"/*",
+							"function randomId() {",
+							"    return parseInt(new Date().getSeconds() + \"\" + new Date().getMilliseconds()); // le script gen tout dans la même MS...",
+							"}",
+							"function randomBattery() {",
+							"    let enumBattery = [\"FULL\", \"OK\", \"LOW\"];",
+							"    return enumBattery[Math.floor(Math.random() * enumBattery.length)];",
+							"}",
+							"function randomState() {",
+							"    let enumStates = [\"AVAILABLE\", \"RECHARGING\", \"DELIVERING\", \"RETURNING\"];",
+							"    return enumStates[Math.floor(Math.random() * enumStates.length)];",
+							"} //*/",
+							"",
+							"",
+							"",
+							"var arrD = [];",
+							"",
+							"// générer 5 random D",
+							"for (let i=0, l=5; i<5; ++i) {",
+							"    arrD.push(D());",
+							"}",
+							"",
+							"var collD = {};",
+							"for (let d of arrD) {",
+							"    collD[d.id] = d;",
+							"}",
+							"",
+							"// stocker",
+							"postman.setEnvironmentVariable(\"arrD\", JSON.stringify((arrD)));",
+							"postman.setEnvironmentVariable(\"collD\", JSON.stringify((collD)));",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{{arrD}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9004/fleet/drones",
+					"host": [
+						"localhost"
+					],
+					"port": "9004",
+					"path": [
+						"fleet",
+						"drones"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT collection COLLECTION",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "300f738e-0c51-4597-a8ea-aead2746d67e",
+						"exec": [
+							"function D () {",
+							"    var randomD = {};",
+							"    let enumBattery = [\"FULL\", \"OK\", \"LOW\"];",
+							"    let enumStates = [\"AVAILABLE\", \"RECHARGING\", \"DELIVERING\", \"RETURNING\"];",
+							"    ",
+							"    randomD.id = Math.floor(Math.random() * 2000);",
+							"    randomD.batteryState = enumBattery[Math.floor(Math.random() * enumBattery.length)];",
+							"    randomD.status = enumStates[Math.floor(Math.random() * enumStates.length)];",
+							"    ",
+							"    return randomD;",
+							"}",
+							"",
+							"/*",
+							"function randomId() {",
+							"    return parseInt(new Date().getSeconds() + \"\" + new Date().getMilliseconds()); // le script gen tout dans la même MS...",
+							"}",
+							"function randomBattery() {",
+							"    let enumBattery = [\"FULL\", \"OK\", \"LOW\"];",
+							"    return enumBattery[Math.floor(Math.random() * enumBattery.length)];",
+							"}",
+							"function randomState() {",
+							"    let enumStates = [\"AVAILABLE\", \"RECHARGING\", \"DELIVERING\", \"RETURNING\"];",
+							"    return enumStates[Math.floor(Math.random() * enumStates.length)];",
+							"} //*/",
+							"",
+							"",
+							"",
+							"var arrD = [];",
+							"",
+							"// générer 5 random D",
+							"for (let i=0, l=5; i<5; ++i) {",
+							"    arrD.push(D());",
+							"}",
+							"",
+							"var collD = {};",
+							"for (let d of arrD) {",
+							"    collD[d.id] = d;",
+							"}",
+							"",
+							"// stocker",
+							"postman.setEnvironmentVariable(\"arrD\", JSON.stringify((arrD)));",
+							"postman.setEnvironmentVariable(\"collD\", JSON.stringify((collD)));",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{{collD}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9004/fleet/drones",
+					"host": [
+						"localhost"
+					],
+					"port": "9004",
+					"path": [
+						"fleet",
+						"drones"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Drone en dur",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": 777,\n\t\"batteryState\": \"EMPTY\",\n\t\"status\": \"RETURNING\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9004/fleet/drones",
+					"host": [
+						"localhost"
+					],
+					"port": "9004",
+					"path": [
+						"fleet",
+						"drones"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
