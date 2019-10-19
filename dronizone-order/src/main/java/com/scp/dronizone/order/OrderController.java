@@ -12,15 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -30,18 +22,43 @@ public class OrderController {
 
     @GetMapping("/connected")
     public String connected() {
-        LOG.warn("GET Request on /order/connected");
+        LOG.warn("GET Request on /orders/connected");
         return "Connected !";
     }
 
-    @RequestMapping("/rest")
-    public void restTemplatetest() {
-        LOG.warn("Test for templateRest ");
+//    @RequestMapping("/rest")
+//    public List<Item> restTemplatetest() {
+//        LOG.warn("Test for templateRest ");
+//
+//        RestTemplate restTemplate = new RestTemplate();
+//        String url = "http://localhost:9002/warehouse/items";
+//
+//        ParameterizedTypeReference<List<Item>> ptr = new ParameterizedTypeReference<List<Item>>() {
+//        };
+//        ResponseEntity<List<Item>> response = restTemplate.exchange(url, HttpMethod.GET, null, ptr);
+//
+//        List<Item> itemList = response.getBody();
+//        LOG.warn("Item list size : " + itemList.size());
+//        LOG.warn("Item list : ");
+//        for (Item item : itemList) {
+//            LOG.warn(item.toString());
+//        }
+//        return itemList;
+//    }
+
+    @RequestMapping("/items")
+    public List<Item> browseItem() {
+        LOG.warn("Request on /orders/items");
+
+//        List<Item> items = Warehouse.getItems();
+//        if (items != null) {
+//            return items;
+//        }
+//        return new ArrayList<Item>();
 
         RestTemplate restTemplate = new RestTemplate();
         String url = "http://localhost:9002/warehouse/items";
-//        String testResponse = restTemplate.getForObject(url, String.class);
-//        LOG.warn("REST response : " + testResponse);
+
         ParameterizedTypeReference<List<Item>> ptr = new ParameterizedTypeReference<List<Item>>() {
         };
         ResponseEntity<List<Item>> response = restTemplate.exchange(url, HttpMethod.GET, null, ptr);
@@ -52,44 +69,28 @@ public class OrderController {
         for (Item item : itemList) {
             LOG.warn(item.toString());
         }
-
-    }
-
-    @RequestMapping("/items")
-    public List<Item> browseItem() {
-        LOG.warn("GET Request on /order/items");
-
-        List<Item> items = Warehouse.getItems();
-        if (items != null) {
-            return items;
-        }
-        return new ArrayList<Item>();
-    }
-
-    @RequestMapping("/create")
-    public Order createOrder(@RequestParam(value = "id", required = true) String itemId) {
-        LOG.warn("GET Request on /order/create with parameter : " + itemId);
-        Order newOrder = Warehouse.createOrder(itemId);
-        OrderManager.addOrder(newOrder);
-        return newOrder;
+        return itemList;
     }
 
     @PostMapping("/")
-    public Order createOrder(@RequestBody Order order){
-        LOG.warn("GET Request on /order/create with parameter : " + order.getIdOrder());
+    public Order createOrder(@RequestBody Order order) {
+        LOG.warn("POST Request on /orders/ with parameter : " + order.getIdOrder());
+        LOG.warn("Passed object  : " + order.toString());
         OrderManager.addOrder(order);
         return order;
     }
 
     @PutMapping("/{id}")
-    public Order updateOrder(@RequestBody Order order, @PathVariable Integer id){
-        LOG.warn("GET Request on /order/create with parameter : " + order.getIdOrder());
+    public Order updateOrder(@RequestBody Order order, @PathVariable Integer id) {
+        LOG.warn("PUT Request on /orders/{id} with parameter : " + id);
         OrderManager.addOrder(order);
         return order;
     }
 
     @GetMapping("/")
     public List<Order> getOrders() {
+        LOG.warn("GET Request on /orders/");
         return OrderManager.getOrders();
     }
+
 }
