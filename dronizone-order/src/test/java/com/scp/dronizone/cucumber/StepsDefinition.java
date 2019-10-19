@@ -15,8 +15,13 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.junit.Before;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.InputStream;
 import java.util.List;
@@ -24,56 +29,43 @@ import java.util.Scanner;
 
 public class StepsDefinition {
     OrderController orderController = new OrderController();
-    CloseableHttpClient httpClient = HttpClients.createDefault();
-    boolean setupDone = false;
+    RestTemplate restTemplate = new RestTemplate();
 
-    @Before()
-    public void setUp() {
-        Warehouse.resetItemList();
-        OrderManager.resetOrders();
-    }
+    String warehouseURL = "http://localhost:9002/warehouse/";
+    String orderServiceURL = "http://localhost:9001/orders/";
 
     @Given("^: an item with id (\\w+) in the warehouse$")
     public void an_item_with_id_in_the_warehouse(String itemId) throws Exception {
-        // Write code here that turns the phrase above into concrete actions
+        restTemplate.delete(warehouseURL + "items");
         Item item = new Item(itemId);
-        Warehouse.addItem(item);
 
-        HttpGet request = new HttpGet("http://localhost:" + 9001 + "/order/items");
-        request.addHeader("content-type", "application/json");
-        HttpResponse httpResponse = httpClient.execute(request);
-        InputStream responseStream = httpResponse.getEntity().getContent();
-        Scanner scanner = new Scanner(responseStream, "UTF-8");
-        String responseString = scanner.useDelimiter("\\Z").next();
+        Item responseItem = restTemplate.postForObject(warehouseURL + "items", item, Item.class);
+        assertEquals("1337", responseItem.getIdItem());
 
-        System.out.println(responseString);
-
-//        HttpGet request = new HttpGet("http://localhost:" + 9002 + "/warehouse/addItem?itemId=" + itemId);
-//        request.addHeader("content-type", "application/json");
-//        HttpResponse httpResponse = httpClient.execute(request);
     }
 
-    @When("^: Roger order the item (\\w+)$")
+    @When("^: Roger orders the item (\\w+)$")
     public void roger_order_the_item(String itemId) throws Exception {
-        // Write code here that turns the phrase above into concrete actions
+        Order order = new Order();
+        order.addItem(new Item(itemId));
+
+        Order createdOrder = restTemplate.postForObject(orderServiceURL, order, Order.class);
+        assertNotNull(createdOrder);
 
 
-        HttpGet request = new HttpGet("http://localhost:" + 9001 + "/order/create?id=" + itemId);
-        request.addHeader("content-type", "application/json");
-        HttpResponse httpResponse = httpClient.execute(request);
-        InputStream responseStream = httpResponse.getEntity().getContent();
-        Scanner scanner = new Scanner(responseStream, "UTF-8");
-        String responseString = scanner.useDelimiter("\\Z").next();
-
-        System.out.println(responseString);
     }
 
     @Then("^: a new order with the item (\\w+) has been added$")
     public void a_new_order_with_the_item_has_been_added(String itemId) throws Exception {
-        // Write code here that turns the phrase above into concrete actions
-        List<Order> orders = OrderManager.getOrders();
+
+        ParameterizedTypeReference<List<Order>> ptr = new ParameterizedTypeReference<List<Order>>() {
+        };
+        ResponseEntity<List<Order>> response = restTemplate.exchange(orderServiceURL, HttpMethod.GET, null, ptr);
+
+        List<Order> orders = response.getBody();
+
         assertEquals("number of orders : ", 1, orders.size());
-        assertEquals("id of the order : ", "125", orders.get(0).getItems().get(0).getIdItem());
+        assertEquals("id of the order : ", itemId, orders.get(0).getItems().get(0).getIdItem());
     }
 
 

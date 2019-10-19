@@ -74,7 +74,7 @@ public class OrderController {
 
     @PostMapping("/")
     public Order createOrder(@RequestBody Order order) {
-        LOG.warn("POST Request on /orders/ with parameter : " + order.getIdOrder());
+        LOG.warn("POST Request on /orders/");
         LOG.warn("Passed object  : " + order.toString());
         OrderManager.addOrder(order);
         return order;

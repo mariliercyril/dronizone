@@ -40,12 +40,26 @@ public class WarehouseController {
     }
 
     @GetMapping("/addItem")
-    public void addItem(@RequestParam(value = "itemId", required = true) String itemId) {
+    public String addItem(@RequestParam(value = "itemId", required = true) String itemId) {
         LOG.warn("Adding item with id : " + itemId);
         Warehouse.addItem(new Item(itemId));
         LOG.warn("Item list now : " + Warehouse.getItems().size());
+        return "Item Added (I think)";
     }
 
+    @PostMapping("/items")
+    public Item addItem(@RequestBody Item item) {
+        LOG.warn("Adding item with id : " + item.getIdItem());
+        Warehouse.addItem(item);
+        return item;
+    }
+
+    @DeleteMapping("/items")
+    public void deleteItems() {
+        LOG.warn("DELETE Request on warehouse/items");
+        Warehouse.resetItemList();
+        LOG.warn("Item list now : " + Warehouse.getItems().size());
+    }
 
     @PutMapping("/orders/pack/{idOrder}")
     public String packOrder(@PathVariable int idOrder) {
