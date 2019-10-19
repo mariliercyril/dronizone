@@ -4,6 +4,11 @@
 
 #cd dronizone-order
 #./mvnw exec:java
+docker run -d -p 9003:9003 -t scp1920/dronizone:notification
+sleep 10;
+cd dronizone-order
+mvn test
+
 
 #cd ../dronizone-warehouse
 #./mvnw exec:java

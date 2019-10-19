@@ -12,6 +12,10 @@
 
   <packaging>jar</packaging>
 
+  <properties>
+    <docker.image.prefix>scp1920</docker.image.prefix>
+  </properties>
+
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
     <testSourceDirectory>src/test/java</testSourceDirectory>
@@ -45,12 +49,27 @@
       </plugin>
 
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <classpathPrefix>lib/</classpathPrefix>
+              <mainClass>com.scp.dronizone.order.OrderService</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+
+      <!-- For Docker... -->
+      <plugin>
         <groupId>com.spotify</groupId>
         <artifactId>dockerfile-maven-plugin</artifactId>
         <version>1.4.9</version>
         <configuration>
-          <repository>${project.groupId}/${project.artifactId}</repository>
-          <tag>${project.version}</tag>
+          <repository>${docker.image.prefix}/dronizone</repository>
+          <tag>order</tag>
         </configuration>
       </plugin>
     </plugins>
