@@ -15,7 +15,8 @@ public class Item {
         this.idItem = idItem;
     }
 
-    public Item(){}
+    public Item() {
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -44,5 +45,13 @@ public class Item {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "idItem='" + idItem + '\'' +
+                ", price=" + price +
+                '}';
     }
 }
