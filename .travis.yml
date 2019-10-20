@@ -10,10 +10,14 @@ before_install:
   - bash docker_login.sh $DOCKER_USERNAME $DOCKER_PASSWORD
 
 install:
+  - docker pull $DOCKER_USERNAME/dronizone:order
+  - docker pull $DOCKER_USERNAME/dronizone:warehouse
   - docker pull $DOCKER_USERNAME/dronizone:notification
 
 before_script:
   - mvn clean package -DskipTests
+  - docker run -d -p 9001:9001 -t $DOCKER_USERNAME/dronizone:order
+  - docker run -d -p 9002:9002 -t $DOCKER_USERNAME/dronizone:warehouse
   - docker run -d -p 9003:9003 -t $DOCKER_USERNAME/dronizone:notification
 
 script:

@@ -48,14 +48,10 @@ public class CustomerServiceImplTest {
     @org.junit.Test
     public void orderItem() {
         Order order = new Order();
-        order.addItem(customerService.browseItem().get(0));
+        order.addItem(new Item("125"));
         customerService.createOrder(order);
 
-        ParameterizedTypeReference<List<Order>> ptr = new ParameterizedTypeReference<List<Order>>() {
-        };
-        ResponseEntity<List<Order>> response = restTemplate.exchange(orderServiceURL, HttpMethod.GET, null, ptr);
-
-        List<Order> orders = response.getBody();
+        List<Order> orders = OrderManager.getOrders();
 
         assertEquals(1, orders.size());
         assertEquals("125", orders.get(0).getItems().get(0).getIdItem());
