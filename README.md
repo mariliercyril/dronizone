@@ -20,10 +20,10 @@ We have already make some research about (the bus) Kafka, and, shortly, we will 
 
 
 ## The main technologies used
-[Apache Maven](https://maven.apache.org/) - Dependency Manager
-[Spring](https://spring.io/) - Application Framework
-[Cucumber](https://cucumber.io/) - TDD (BDD) Tool
-[Travis CI](https://travis-ci.org/) - CI Tool
+[Apache Maven](https://maven.apache.org/) - Dependency Manager  
+[Spring](https://spring.io/) - Application Framework  
+[Cucumber](https://cucumber.io/) - TDD (BDD) Tool  
+[Travis CI](https://travis-ci.org/) - CI Tool  
 [Docker](https://www.docker.com/) - Deployment and Execution Tool  
 
 
