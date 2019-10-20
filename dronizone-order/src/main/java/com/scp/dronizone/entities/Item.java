@@ -1,9 +1,18 @@
-package com.scp.dronizone.order.entity;
+package com.scp.dronizone.entities;
 
+//import javax.persistence.Entity;
+//import javax.persistence.GeneratedValue;
+//import javax.persistence.GenerationType;
+//import javax.persistence.Id;
 import java.util.Objects;
 
+//@Entity
 public class Item {
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     String idItem;
+
+
     float price;
 
 //    public Item(float price) {

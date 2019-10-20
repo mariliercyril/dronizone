@@ -1,0 +1,23 @@
+version: '3'
+services:
+  warehouse:
+    build:
+      context: ./dronizone-warehouse
+      dockerfile: Dockerfile
+    image: "scp1920/dronizone:warehouse"
+    ports:
+      - "9002:9002"
+    networks:
+    - new
+  fleet:
+    build:
+      context: ./dronizone-fleet
+      dockerfile: Dockerfile
+    image: "scp1920/dronizone:fleet"
+    ports:
+      - "9004:9004"
+    networks:
+    - new
+
+networks:
+  new:

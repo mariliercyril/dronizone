@@ -209,4 +209,10 @@ public class FleetController {
     public @ResponseBody Object polo(@RequestBody Object received) {
         return received;
     }
+
+    @PostMapping("/assign")
+    public String assignNewOrder(Integer idOrder){
+        String message = "OK";
+        return message;
+    }
 }

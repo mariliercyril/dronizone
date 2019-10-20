@@ -1,24 +1,22 @@
-package com.scp.dronizone.order.entity;
+package com.scp.dronizone.entities;
 
-import com.scp.dronizone.order.states.ProcessingState;
-
+//import com.scp.dronizone.common.states.ProcessingState;
+//
+//import javax.persistence.Entity;
+//import javax.persistence.Id;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
+//@Entity
 public class Order {
     Customer customer;
-    ProcessingState processingState;
+//    ProcessingState processingState;
+//    @Id
     String idOrder;
     List<Item> items = new ArrayList<>();
     float price;
 
     public Order() {
-    }
-
-    public Order(String idOrder, float price) {
-        this.idOrder = idOrder;
-        this.price = price;
     }
 
     @Override
@@ -58,9 +56,9 @@ public class Order {
         this.price = price;
     }
 
-    public ProcessingState getProcessingState() {
-        return this.processingState;
-    }
+//    public ProcessingState getProcessingState(){
+//        return this.processingState;
+//    }
 
     public void addItem(Item newItem) {
         items.add(newItem);
@@ -70,8 +68,8 @@ public class Order {
     @Override
     public String toString() {
         return "Order{" +
-                "processingState=" + processingState +
-                ", idOrder='" + idOrder + '\'' +
+                "idOrder='" + idOrder + '\'' +
+                ", items=" + items +
                 ", price=" + price +
                 '}';
     }

@@ -1,4 +1,4 @@
-package com.scp.dronizone.order.entity;
+package com.scp.dronizone.warehouse.entity;
 
 import java.util.Objects;
 

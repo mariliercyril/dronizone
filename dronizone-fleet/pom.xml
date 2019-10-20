@@ -70,6 +70,16 @@
           <mainClass>com.scp.dronizone.fleet.FleetService</mainClass>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>com.spotify</groupId>
+        <artifactId>dockerfile-maven-plugin</artifactId>
+        <version>1.4.9</version>
+        <configuration>
+          <repository>scp1920/dronizone</repository>
+          <tag>fleet</tag>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 </project>
