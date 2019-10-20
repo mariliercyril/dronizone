@@ -18,6 +18,15 @@ services:
       - "9004:9004"
     networks:
     - new
+  order:
+    build:
+      context: ./dronizone-order
+      dockerfile: Dockerfile
+    image: "scp1920/dronizone:fleet"
+    ports:
+    - "9001:9001"
+    networks:
+    - new
 
 networks:
   new:
