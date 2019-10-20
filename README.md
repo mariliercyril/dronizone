@@ -1,4 +1,4 @@
-# dronizone [![Build Status](https://travis-ci.com/pns-si5-soa/dronizone-1920-scp-1920.svg?token=HLwfpNcZxzix3skLQMXL&branch=dev)](https://travis-ci.com/pns-si5-soa/dronizone-1920-scp-1920) (*on the "dev" branch*)  
+# dronizone [![Build Status](https://travis-ci.com/pns-si5-soa/dronizone-1920-scp-1920.svg?token=HLwfpNcZxzix3skLQMXL&branch=dev)](https://travis-ci.com/pns-si5-soa/dronizone-1920-scp-1920)  
 The goal of this project "is to define and implement the *Minimal and Viable Product* (MVP) associated to the Dronazon platform". The Dronazon platform is a platform of delivery by drone; our roadmap can be summarized as follows:  
 *Service Oriented Architecture (SOA) -> Microservice Oriented Architecture (MOA) -> Event Oriented Architecture (EOA)*  
 
