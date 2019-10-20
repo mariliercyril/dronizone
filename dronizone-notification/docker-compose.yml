@@ -1,0 +1,17 @@
+version: '3'
+services:
+  mongodb:
+    image: mongo:4.0.0
+    container_name: mongodb
+    ports:
+    - 27017:27017
+    command: --smallfiles
+  notification:
+    build: .
+    image: scp1920/dronizone:notification
+    ports:
+    - 9003:9003
+    links:
+    - mongodb
+    environment:
+    - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/notification

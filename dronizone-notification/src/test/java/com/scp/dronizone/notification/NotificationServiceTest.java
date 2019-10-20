@@ -12,5 +12,5 @@ import cucumber.api.junit.Cucumber;
  * @author cmarilier
  */
 @RunWith(Cucumber.class)
-@CucumberOptions(features="src/test/resources/features", plugin="pretty")
+@CucumberOptions(features = "src/test/resources/features", plugin = "pretty")
 public class NotificationServiceTest {}
