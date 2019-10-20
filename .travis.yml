@@ -20,6 +20,7 @@ script:
   - cd dronizone-order
   - mvn test
   - cd ../dronizone-notification
+  - docker-compose up --build -d
   - mvn test
   - cd ../dronizone-fleet
   - mvn test
