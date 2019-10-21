@@ -9,6 +9,9 @@ services:
       - "9002:9002"
     networks:
     - new
+    environment:
+    - DRONIZONE_FLEET_SERVICE_HOST=fleet
+    - DRONIZONE_FLEET_SERVICE_PORT=9004
   fleet:
     build:
       context: ./dronizone-fleet
@@ -22,11 +25,33 @@ services:
     build:
       context: ./dronizone-order
       dockerfile: Dockerfile
-    image: "scp1920/dronizone:fleet"
+    image: "scp1920/dronizone:order"
     ports:
     - "9001:9001"
     networks:
     - new
+    environment:
+      - DRONIZONE_WAREHOUSE_SERVICE_HOST=warehouse
+      - DRONIZONE_WAREHOUSE_SERVICE_PORT=9002
+  notification:
+    build:
+      context: ./dronizone-notification
+      dockerfile: Dockerfile
+    image: "scp1920/dronizone:notification"
+    ports:
+      - "9003:9003"
+    networks:
+      - new
+    environment:
+    - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/notification
 
+  mongodb:
+    image: mongo:4.0.0
+    container_name: mongodb
+    ports:
+    - 27017:27017
+    command: --smallfiles
+    networks:
+    - new
 networks:
   new:

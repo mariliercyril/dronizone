@@ -1,7 +1,12 @@
 sudo: required
 
 language: java
-env: DOCKER_USERNAME=scp1920
+env:
+  - DOCKER_USERNAME=scp1920
+  - DRONIZONE_FLEET_SERVICE_HOST=localhost
+  - DRONIZONE_FLEET_SERVICE_PORT=9004
+  - DRONIZONE_WAREHOUSE_SERVICE_HOST=localhost
+  - DRONIZONE_WAREHOUSE_SERVICE_PORT=9002
 
 services:
   - docker

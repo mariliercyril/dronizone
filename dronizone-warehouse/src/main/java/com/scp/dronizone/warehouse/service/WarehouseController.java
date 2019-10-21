@@ -4,6 +4,7 @@ import com.scp.dronizone.warehouse.entity.Item;
 import com.scp.dronizone.warehouse.entity.Order;
 import com.scp.dronizone.warehouse.entity.OrderManager;
 import com.scp.dronizone.warehouse.entity.Warehouse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -22,6 +23,9 @@ import java.util.Map;
 @RequestMapping("/warehouse")
 public class WarehouseController {
     private static final Logger LOG = LoggerFactory.getLogger(WarehouseController.class);
+
+    @Value("${fleet.service.url}")
+    private String FLEET_SERVICE_URL;
 
     @GetMapping("/connected")
     public String connected() {
@@ -67,7 +71,7 @@ public class WarehouseController {
 
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<Integer> request = new HttpEntity<Integer>(idOrder);
-        ResponseEntity<String> response = restTemplate.exchange("http://fleet:" + 9004 + "/fleet/assign", HttpMethod.POST, request, String.class);
+        ResponseEntity<String> response = restTemplate.exchange("http://"+FLEET_SERVICE_URL+ "/fleet/assign", HttpMethod.POST, request, String.class);
 
         return "OK";
     }

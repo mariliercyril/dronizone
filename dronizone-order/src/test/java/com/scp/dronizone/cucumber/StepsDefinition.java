@@ -76,7 +76,13 @@ public class StepsDefinition {
 
     @Then("^: The server will respond with an item with id (\\w+)$")
     public void the_server_will_respond_with_an_item_with_id(String arg1) throws Exception {
-        List<Item> items = orderController.browseItem();
+        ParameterizedTypeReference<List<Item>> ptr = new ParameterizedTypeReference<List<Item>>() {
+        };
+
+        ResponseEntity<List<Item>> response= restTemplate.exchange(orderServiceURL+"items", HttpMethod.GET, null, ptr);
+
+        List<Item> items = response.getBody();
+
         assertEquals("The warehouse has one item", 1, items.size());
         assertEquals("The item has the id given in parameter", arg1, items.get(0).getIdItem());
 

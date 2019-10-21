@@ -6,6 +6,7 @@ import com.scp.dronizone.order.entity.OrderManager;
 import com.scp.dronizone.order.entity.Warehouse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,9 @@ import java.util.List;
 @RequestMapping("/orders")
 public class OrderController {
     private static final Logger LOG = LoggerFactory.getLogger(OrderController.class);
+
+    @Value("${warehouse.service.url}")
+    private String ORDER_SERVICE_URL;
 
     @GetMapping("/connected")
     public String connected() {
@@ -57,7 +61,7 @@ public class OrderController {
 //        return new ArrayList<Item>();
 
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:9002/warehouse/items";
+        String url = "http://"+ORDER_SERVICE_URL+"/warehouse/items";
 
         ParameterizedTypeReference<List<Item>> ptr = new ParameterizedTypeReference<List<Item>>() {
         };
