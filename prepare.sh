@@ -8,3 +8,5 @@ chmod +x mvnw
 docker login -u scp1920 -p laborious
 docker pull scp1920/dronizone:notification
 docker pull scp1920/dronizone:order
+docker pull scp1920/dronizone:warehouse
+docker pull scp1920/dronizone:fleet
