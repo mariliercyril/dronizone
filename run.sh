@@ -14,20 +14,7 @@ docker-compose up -d
 
 sleep 10;
 
-order_service_url="http://192.168.99.101:9001/orders/"
-warehouse_service_url="http://192.168.99.101:9002/warehouse/"
-
-curl -H "Content-Type:application/json" \
--d '{"idItem":123,"price":2.0}' \
--X POST ${warehouse_service_url}items
-
-curl ${warehouse_service_url}items
-
-curl -H "Content-Type:application/json" \
--d '{"idOrder":1,"price":2.0,"items":[{"idItem":123,"price":2.0}]}' \
--X POST ${order_service_url}
-
-curl ${order_service_url}
+docker run --network=dronizone1920scp1920_dronizone-net scenario_1
 
 #sleep 10;
 #cd dronizone-order

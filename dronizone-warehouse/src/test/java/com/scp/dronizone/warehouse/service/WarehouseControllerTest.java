@@ -42,7 +42,7 @@ class WarehouseControllerTest {
 
     @Test
     void packOrder() {
-        warehouseService.packOrder(order.getId());
+        warehouseService.packOrder(order.getIdOrder());
 
         assertEquals(order.getProcessingState(), ProcessingState.PACKED);
     }

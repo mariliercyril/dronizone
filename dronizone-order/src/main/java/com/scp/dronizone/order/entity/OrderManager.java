@@ -20,9 +20,9 @@ public class OrderManager {
         return unpackedOrders; // TODO check unpackedOrders and return them
     }
 
-    public static void setOrderPacked(String idOrder) {
+    public static void setOrderPacked(int idOrder) {
         for (Order order : orders) {
-            if(order.getIdOrder().equals(idOrder)){
+            if(order.getIdOrder() == idOrder){
                 order.processingState = ProcessingState.PACKED;
                 return;
             }

@@ -26,7 +26,7 @@ public class OrderManager {
 
     public static Order setOrderPacked(int idOrder) {
         for (Order order : orders) {
-            if(order.getId() == idOrder){
+            if(order.getIdOrder() == idOrder){
                 order.setProcessingState(ProcessingState.PACKED);
                 return order;
             }

@@ -10,3 +10,5 @@ docker pull scp1920/dronizone:notification
 docker pull scp1920/dronizone:order
 docker pull scp1920/dronizone:warehouse
 docker pull scp1920/dronizone:fleet
+
+docker build -t scenario_1 ./demo/

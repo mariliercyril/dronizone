@@ -24,7 +24,7 @@ public class Warehouse {
         for (Item item : items) {
             if (item.getIdItem().equals(itemId)) {
                 newOrder.addItem(item);
-                newOrder.setIdOrder(Integer.toString(OrderManager.getNbOrder()+1));
+                newOrder.setIdOrder(OrderManager.getNbOrder()+1);
                 newOrder.processingState = ProcessingState.PENDING;
             }
         }

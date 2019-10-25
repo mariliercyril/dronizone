@@ -12,7 +12,7 @@ public class Order {
     Customer customer;
 //    ProcessingState processingState;
 //    @Id
-    String idOrder;
+    int idOrder;
     List<Item> items = new ArrayList<>();
     float price;
 
@@ -24,7 +24,7 @@ public class Order {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return idOrder.equals(order.idOrder);
+        return idOrder == idOrder;
     }
 
     @Override
@@ -32,11 +32,11 @@ public class Order {
         return Objects.hash(idOrder);
     }
 
-    public String getIdOrder() {
+    public int getIdOrder() {
         return idOrder;
     }
 
-    public void setIdOrder(String idOrder) {
+    public void setIdOrder(int idOrder) {
         this.idOrder = idOrder;
     }
 
@@ -68,7 +68,7 @@ public class Order {
     @Override
     public String toString() {
         return "Order{" +
-                "idOrder='" + idOrder + '\'' +
+                "idOrder=" + idOrder +
                 ", items=" + items +
                 ", price=" + price +
                 '}';

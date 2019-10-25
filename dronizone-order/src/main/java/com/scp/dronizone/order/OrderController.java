@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -81,6 +82,11 @@ public class OrderController {
         LOG.warn("POST Request on /orders/");
         LOG.warn("Passed object  : " + order.toString());
         OrderManager.addOrder(order);
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<Order> request = new HttpEntity<Order>(order);
+        ResponseEntity<String> response = restTemplate.exchange("http://"+ORDER_SERVICE_URL+ "/warehouse/orders", HttpMethod.POST, request, String.class);
+
         return order;
     }
 
