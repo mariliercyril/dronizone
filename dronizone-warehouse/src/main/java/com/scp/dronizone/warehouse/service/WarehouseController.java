@@ -27,6 +27,9 @@ public class WarehouseController {
     @Value("${fleet.service.url}")
     private String FLEET_SERVICE_URL;
 
+    @Value("${order.service.url}")
+    private String ORDER_SERVICE_URL;
+
     @GetMapping("/connected")
     public String connected() {
         return "Connected !";
@@ -67,11 +70,15 @@ public class WarehouseController {
 
     @PutMapping("/orders/pack/{idOrder}")
     public String packOrder(@PathVariable int idOrder) {
-        OrderManager.setOrderPacked(idOrder);
+        Order order = OrderManager.setOrderPacked(idOrder);
 
-        RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<Integer> request = new HttpEntity<Integer>(idOrder);
-        ResponseEntity<String> response = restTemplate.exchange("http://"+FLEET_SERVICE_URL+ "/fleet/assign", HttpMethod.POST, request, String.class);
+        RestTemplate restTemplate_order = new RestTemplate();
+        HttpEntity<Order> request_order = new HttpEntity<Order>(order);
+        ResponseEntity<String> response_order = restTemplate_order.exchange("http://"+ORDER_SERVICE_URL+ "/orders/"+order.getIdOrder(), HttpMethod.PUT, request_order, String.class);
+
+        RestTemplate restTemplate_fleet = new RestTemplate();
+        HttpEntity<Order> request_fleet = new HttpEntity<Order>(order);
+        ResponseEntity<String> response_fleet = restTemplate_fleet.exchange("http://"+FLEET_SERVICE_URL+ "/fleet/assign", HttpMethod.POST, request_fleet, String.class);
 
         return "OK";
     }

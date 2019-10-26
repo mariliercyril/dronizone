@@ -38,6 +38,14 @@ public class OrderManager {
         return orders;
     }
 
+    public static Order getOrderById(int id) {
+        for(Order order : orders){
+            if(order.getIdOrder() == id)
+                return order;
+        }
+        return null;
+    }
+
     public static void resetOrders() {
         orders.clear();
     }
@@ -48,5 +56,33 @@ public class OrderManager {
 
     public static int getNbOrder(){
         return orders.size();
+    }
+
+    public static Order createOrder(List<Item> items) {
+        Order newOrder = new Order();
+        float totalPrice = 0;
+
+        for(Item item : items){
+            totalPrice += item.getPrice();
+        }
+
+        newOrder.setItems(items);
+        newOrder.setPrice(totalPrice);
+        newOrder.setIdOrder(OrderManager.getNbOrder()+1);
+        newOrder.processingState = ProcessingState.PENDING;
+
+        return newOrder;
+    }
+
+    public static Order updateOrder(Order orderUpdate){
+        for(int i=0;i<orders.size();i++){
+            Order order = orders.get(i);
+            if(order.getIdOrder() == orderUpdate.getIdOrder()){
+                orders.remove(i);
+                orders.add(orderUpdate);
+                return orderUpdate;
+            }
+        }
+        return null;
     }
 }

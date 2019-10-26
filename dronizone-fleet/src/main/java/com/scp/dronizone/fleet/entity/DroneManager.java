@@ -1,7 +1,9 @@
 package com.scp.dronizone.fleet.entity;
 
 import com.scp.dronizone.fleet.states.DroneState;
+import com.scp.dronizone.fleet.states.ProcessingState;
 
+import javax.validation.constraints.Max;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -102,5 +104,17 @@ public class DroneManager {
                 System.out.println("Drone #" + entry.getKey() + " was recalled from its delivery and is now " + entry.getValue().getStatus());
             }
         }
+    }
+
+    public static Drone assignOrderToDrone(Order order){
+        Collection<Drone> dronesList = drones.values();
+        for (Drone drone : dronesList) {
+            if(drone.getStatus().equals(DroneState.AVAILABLE)){
+                drone.setOrder(order);
+                order.setProcessingState(ProcessingState.DELIVERING);
+                return drone;
+            }
+        }
+        return null;
     }
 }

@@ -8,6 +8,7 @@ import java.util.Objects;
 
 public class Order {
     Customer customer;
+
     ProcessingState processingState;
     int idOrder;
     List<Item> items = new ArrayList<>();
@@ -61,6 +62,11 @@ public class Order {
     public ProcessingState getProcessingState() {
         return this.processingState;
     }
+
+    public void setProcessingState(ProcessingState processingState) {
+        this.processingState = processingState;
+    }
+
 
     public void addItem(Item newItem) {
         items.add(newItem);

@@ -19,19 +19,6 @@ public class Warehouse {
         items = newItems;
     }
 
-    public static Order createOrder(String itemId) {
-        Order newOrder = new Order();
-        for (Item item : items) {
-            if (item.getIdItem().equals(itemId)) {
-                newOrder.addItem(item);
-                newOrder.setIdOrder(OrderManager.getNbOrder()+1);
-                newOrder.processingState = ProcessingState.PENDING;
-            }
-        }
-
-        return newOrder;
-    }
-
     public static void addItem(Item newItem) {
         items.add(newItem);
     }

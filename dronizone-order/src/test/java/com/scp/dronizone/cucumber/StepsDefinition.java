@@ -49,7 +49,7 @@ public class StepsDefinition {
         Order order = new Order();
         order.addItem(new Item(itemId));
 
-        Order createdOrder = restTemplate.postForObject(orderServiceURL, order, Order.class);
+        Order createdOrder = restTemplate.postForObject(orderServiceURL+"/new", order, Order.class);
         assertNotNull(createdOrder);
 
 

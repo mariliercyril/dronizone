@@ -12,6 +12,8 @@ public class Drone {
 
     private DroneState status;
 
+    private Order order;
+
     public Drone() {
         this.id = DroneManager.counter.incrementAndGet();
         this.batteryState = DroneBatteryState.FULL;
@@ -77,5 +79,13 @@ public class Drone {
         return "Drone #" + id
                 + ": \nBattery state: " + batteryState
                 + "\nDrone status: " + status;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 }

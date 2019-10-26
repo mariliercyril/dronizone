@@ -11,4 +11,10 @@ docker pull scp1920/dronizone:order
 docker pull scp1920/dronizone:warehouse
 docker pull scp1920/dronizone:fleet
 
+docker-compose up -d
+
 docker build -t scenario_1 ./demo/
+
+echo Lancement des services...
+
+sleep 10

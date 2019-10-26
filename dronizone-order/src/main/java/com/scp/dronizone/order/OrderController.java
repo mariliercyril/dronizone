@@ -23,7 +23,7 @@ public class OrderController {
     private static final Logger LOG = LoggerFactory.getLogger(OrderController.class);
 
     @Value("${warehouse.service.url}")
-    private String ORDER_SERVICE_URL;
+    private String WAREHOUSE_SERVICE_URL;
 
     @GetMapping("/connected")
     public String connected() {
@@ -62,7 +62,7 @@ public class OrderController {
 //        return new ArrayList<Item>();
 
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://"+ORDER_SERVICE_URL+"/warehouse/items";
+        String url = "http://"+WAREHOUSE_SERVICE_URL+"/warehouse/items";
 
         ParameterizedTypeReference<List<Item>> ptr = new ParameterizedTypeReference<List<Item>>() {
         };
@@ -77,7 +77,7 @@ public class OrderController {
         return itemList;
     }
 
-    @PostMapping("/")
+    @PostMapping("/new")
     public Order createOrder(@RequestBody Order order) {
         LOG.warn("POST Request on /orders/");
         LOG.warn("Passed object  : " + order.toString());
@@ -85,22 +85,41 @@ public class OrderController {
 
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<Order> request = new HttpEntity<Order>(order);
-        ResponseEntity<String> response = restTemplate.exchange("http://"+ORDER_SERVICE_URL+ "/warehouse/orders", HttpMethod.POST, request, String.class);
+        ResponseEntity<String> response = restTemplate.exchange("http://"+WAREHOUSE_SERVICE_URL+ "/warehouse/orders", HttpMethod.POST, request, String.class);
 
         return order;
     }
 
+    @PostMapping("/")
+    public Order createNewOrder(@RequestBody List<Item> items) {
+        Order order = OrderManager.createOrder(items);
+        OrderManager.addOrder(order);
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<Order> request = new HttpEntity<Order>(order);
+        ResponseEntity<String> response = restTemplate.exchange("http://"+WAREHOUSE_SERVICE_URL+ "/warehouse/orders", HttpMethod.POST, request, String.class);
+
+        return order;
+    }
+
+
     @PutMapping("/{id}")
     public Order updateOrder(@RequestBody Order order, @PathVariable Integer id) {
         LOG.warn("PUT Request on /orders/{id} with parameter : " + id);
-        OrderManager.addOrder(order);
-        return order;
+        Order updateOrder = OrderManager.updateOrder(order);
+        return updateOrder;
     }
 
     @GetMapping("/")
     public List<Order> getOrders() {
         LOG.warn("GET Request on /orders/");
         return OrderManager.getOrders();
+    }
+
+    @GetMapping("/{id}")
+    public Order getOrders( @PathVariable Integer id) {
+        LOG.warn("GET Request on /orders/");
+        return OrderManager.getOrderById(id);
     }
 
 }

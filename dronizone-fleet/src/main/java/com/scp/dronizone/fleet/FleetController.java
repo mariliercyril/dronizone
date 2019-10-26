@@ -2,12 +2,18 @@ package com.scp.dronizone.fleet;
 
 import com.scp.dronizone.fleet.entity.Drone;
 import com.scp.dronizone.fleet.entity.DroneManager;
+import com.scp.dronizone.fleet.entity.Order;
 import com.scp.dronizone.fleet.states.DroneBatteryState;
 import com.scp.dronizone.fleet.states.DroneState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +23,9 @@ import javax.servlet.http.HttpServletRequest;
 public class FleetController {
     private static final Logger LOG = LoggerFactory.getLogger(FleetController.class);
 
+
+    @Value("${order.service.url}")
+    private String ORDER_SERVICE_URL;
 
     /**
      * Prouve que le Service est en ligne
@@ -211,8 +220,13 @@ public class FleetController {
     }
 
     @PostMapping("/assign")
-    public String assignNewOrder(Integer idOrder){
-        String message = "OK";
-        return message;
+    public Drone assignNewOrder(@RequestBody Order order){
+        Drone drone = DroneManager.assignOrderToDrone(order);
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<Order> request = new HttpEntity<Order>(order);
+        ResponseEntity<String> response = restTemplate.exchange("http://"+ORDER_SERVICE_URL+ "/orders/"+order.getIdOrder(), HttpMethod.PUT, request, String.class);
+
+        return drone;
     }
 }

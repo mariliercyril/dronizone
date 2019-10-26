@@ -10,9 +10,6 @@
 #docker run -d -p 9002:9002 -t scp1920/dronizone:warehouse
 #docker run -d -p 9003:9003 -t scp1920/dronizone:notification
 #docker run -d -p 9004:9004 -t scp1920/dronizone:fleet
-docker-compose up -d
-
-sleep 10;
 
 docker run --network=dronizone1920scp1920_dronizone-net scenario_1
 

@@ -12,6 +12,8 @@ services:
     environment:
     - DRONIZONE_FLEET_SERVICE_HOST=fleet
     - DRONIZONE_FLEET_SERVICE_PORT=9004
+    - DRONIZONE_ORDER_SERVICE_HOST=order
+    - DRONIZONE_ORDER_SERVICE_PORT=9001
   fleet:
     build:
       context: ./dronizone-fleet
@@ -21,6 +23,9 @@ services:
       - "9004:9004"
     networks:
     - dronizone-net
+    environment:
+      - DRONIZONE_ORDER_SERVICE_HOST=order
+      - DRONIZONE_ORDER_SERVICE_PORT=9001
   order:
     build:
       context: ./dronizone-order
@@ -45,14 +50,14 @@ services:
     environment:
     - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/notification
 
-  mongodb:
-    image: mongo:4.0.0
-    container_name: mongodb
-    ports:
-    - 27017:27017
-    command: --smallfiles
-    networks:
-    - dronizone-net
+#  mongodb:
+#    image: mongo:4.0.0
+#    container_name: mongodb
+#    ports:
+#    - 27017:27017
+#    command: --smallfiles
+#    networks:
+#    - dronizone-net
 
 networks:
   dronizone-net:
