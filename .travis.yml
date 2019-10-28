@@ -1,22 +1,15 @@
 sudo: required
 
 language: java
-env:
-  - DOCKER_USERNAME=scp1920
 
 services:
   - docker
 
-before_install:
-  - bash docker_login.sh $DOCKER_USERNAME $DOCKER_PASSWORD
-
 install:
-  - docker pull $DOCKER_USERNAME/dronizone:notification
   - mvn clean install -DskipTests
 
 before_script:
   - docker-compose up --build -d
-  - docker run -d -p 9103:9103 -t $DOCKER_USERNAME/dronizone:notification
 
 script:
   - cd dronizone-notification
