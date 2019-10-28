@@ -43,6 +43,18 @@ public class NotificationController implements INotificationService {
 		this.notificationRepository = notificationRepository;
 	}
 
+	@PostMapping(value = "/orders")
+	public void postOrder(@RequestBody Order order) {
+
+		orderRepository.save(order);
+	}
+
+	@PostMapping(value = "/customers")
+	public void postCustomer(@RequestBody Customer customer) {
+
+		customerRepository.save(customer);
+	}
+
 	@Override
 	@PostMapping(value = "/notifications")
 	public ResponseEntity<String> send(@RequestBody Notification notification) {
