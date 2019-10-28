@@ -1,23 +1,27 @@
 package com.scp.dronizone.warehouse.entity;
 
 import com.scp.dronizone.warehouse.states.ProcessingState;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Entity
-@Table(name = "Order")
+
+@Document(collection = "order")
 public class Order {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "o_id")
+    @Id
+    String id;
+
+    @Field("o_id")
     int idOrder;
 
-    @Column(name = "o_price")
+    @Field("o_price")
     double price;
 
-    @Column(name = "o_status")
+    @Field("o_status")
     ProcessingState processingState = ProcessingState.PENDING;
 
     public Order() {

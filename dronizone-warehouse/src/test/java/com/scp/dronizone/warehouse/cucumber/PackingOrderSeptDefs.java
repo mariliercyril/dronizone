@@ -1,28 +1,46 @@
 package com.scp.dronizone.warehouse.cucumber;
 
+import com.scp.dronizone.warehouse.entity.Item;
 import com.scp.dronizone.warehouse.entity.Order;
 import com.scp.dronizone.warehouse.entity.OrderManager;
+import com.scp.dronizone.warehouse.repository.OrderRepository;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+@DataMongoTest
+@ExtendWith(SpringExtension.class)
 public class PackingOrderSeptDefs {
     Order order;
     List<Order> orders;
 
+    @Autowired
+    MongoTemplate mongoTemplate;
+
+    @After
+    public void deleteOrder(){
+        mongoTemplate.remove(order);
+    }
+
     @Given("^an order with id (\\d+)$")
     public void an_order_with_id(int idOrder) throws Exception {
         order = new Order(idOrder);
-        OrderManager.addOrder(order);
+        mongoTemplate.save(order);
     }
 
     @When("^: Klaus goes to the url warehouse/orders$")
