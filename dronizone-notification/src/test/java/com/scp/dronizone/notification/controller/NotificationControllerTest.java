@@ -2,11 +2,13 @@ package com.scp.dronizone.notification.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.client.RestTemplate;
+
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.scp.dronizone.notification.NotificationApplication;
@@ -32,7 +34,7 @@ public class NotificationControllerTest {
 	private UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl("http://" + host + ":" + port);	
 	private String notificationServiceUri = uriComponentsBuilder.toUriString();
 	//
-	private String uri = "http://dronizone:9003";
+	private String uri = "http://localhost:9003";
 
 	protected ResponseEntity<String> responseEntity = null;
 
