@@ -27,7 +27,7 @@ public class CustomerControllerTest {
 	}
 
 	@PostMapping(value = "/customers")
-	public void postCustomer(@RequestBody Customer customer) {
+	public void insertCustomer(@RequestBody Customer customer) {
 
 		customerRepository.save(customer);
 	}
