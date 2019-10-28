@@ -36,24 +36,28 @@ public class DoesTheFleetServiceNotifyACustomerStepDefinitions extends Notificat
 	public void i_am_alexandre_and_my_customer_number_is_equal_to(Customer.Gender customerGender, String customerName, Long customerId) throws Throwable {
 
 		customer = new Customer(customerId, customerGender, customerName);
+		insertCustomer(customer);
 	}
 
 	@And("^I am ([\\S]+) ([^\"]*) and my customer number is (\\d+)$")
 	public void i_am_and_my_customer_number_is(Customer.Gender customerGender, String customerName, Long customerId) throws Throwable {
 
 		customer = new Customer(customerId, customerGender, customerName);
+		insertCustomer(customer);
 	}
 
 	@When("^the drone assigned to deliver my order (\\d+) at the address \"([^\"]*)\" is no longer able to fulfill its mission$")
 	public void the_drone_assigned_to_deliver_my_order_at_the_address_is_no_longer_able_to_fulfill_its_mission(Long orderId, String deliveryAddress) throws Throwable {
 
 		order = new Order(orderId, customer.getCustomerId(), deliveryAddress);
+		insertOrder(order);
 	}
 
 	@When("^the drone delivering my order (\\d+) will arrive shortly at the address ([^\"]*)$")
 	public void the_drone_delivering_my_order_will_arrive_shortly_at_the_address(Long orderId, String deliveryAddress) throws Throwable {
 
 		order = new Order(orderId, customer.getCustomerId(), deliveryAddress);
+		insertOrder(order);
 	}
 
 	@Then("^due to \"([^\"]*)\" the Fleet Service notifies me that my order (\\d+) will finally not be delivered$")

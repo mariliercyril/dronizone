@@ -13,7 +13,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.scp.dronizone.notification.NotificationApplication;
 
+import com.scp.dronizone.notification.model.entity.Customer;
 import com.scp.dronizone.notification.model.entity.Notification;
+import com.scp.dronizone.notification.model.entity.Order;
 
 /**
  * The {@code NotificationControllerTest} class allows to test the <b>notification</b> service.
@@ -38,6 +40,24 @@ public class NotificationControllerTest {
 
 	@Autowired
 	protected RestTemplate restTemplate;
+
+	protected void insertCustomer(Customer customer) {
+
+		if (restTemplate == null) {
+			restTemplate = new RestTemplate();
+		}
+
+		responseEntity = restTemplate.postForEntity(uri + "/customers", customer, String.class);
+	}
+
+	protected void insertOrder(Order order) {
+
+		if (restTemplate == null) {
+			restTemplate = new RestTemplate();
+		}
+
+		responseEntity = restTemplate.postForEntity(uri + "/orders", order, String.class);
+	}
 
 	/**
 	 * Tests the consumption of the notification service...
