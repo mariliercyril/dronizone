@@ -24,13 +24,13 @@ import com.scp.dronizone.notification.model.entity.Order;
 public class NotificationControllerTest {
 
 	@Value("${server.host}")
-	private static String host;
+	private String host;
 
 	@Value("${server.port}")
-	private static String port;
+	private String port;
 
-	private static final UriComponentsBuilder URI_COMPONENTS_BUILDER = UriComponentsBuilder.fromHttpUrl("http://" + host + ":" + port);	
-	private static final String NOTIFICATION_SERVICE_URI = URI_COMPONENTS_BUILDER.toUriString();
+	private UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl("http://" + host + ":" + port);	
+	private String notificationServiceUri = uriComponentsBuilder.toUriString();
 
 	protected ResponseEntity<String> responseEntity = null;
 
@@ -43,7 +43,7 @@ public class NotificationControllerTest {
 			restTemplate = new RestTemplate();
 		}
 
-		responseEntity = restTemplate.postForEntity(NOTIFICATION_SERVICE_URI + "/customers", customer, String.class);
+		responseEntity = restTemplate.postForEntity(notificationServiceUri + "/customers", customer, String.class);
 	}
 
 	protected void insertOrder(Order order) {
@@ -52,7 +52,7 @@ public class NotificationControllerTest {
 			restTemplate = new RestTemplate();
 		}
 
-		responseEntity = restTemplate.postForEntity(NOTIFICATION_SERVICE_URI + "/orders", order, String.class);
+		responseEntity = restTemplate.postForEntity(notificationServiceUri + "/orders", order, String.class);
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class NotificationControllerTest {
 			restTemplate = new RestTemplate();
 		}
 
-		responseEntity = restTemplate.postForEntity(NOTIFICATION_SERVICE_URI + "/notifications", notification, String.class);
+		responseEntity = restTemplate.postForEntity(notificationServiceUri + "/notifications", notification, String.class);
 	}
 
 }
