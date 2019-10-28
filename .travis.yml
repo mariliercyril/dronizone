@@ -12,9 +12,6 @@ before_script:
   - cd dronizone-notification
   - docker-compose up --build -d
 
-script:
-  - mvn test -B
-
 notifications:
   email:
     recipients:
