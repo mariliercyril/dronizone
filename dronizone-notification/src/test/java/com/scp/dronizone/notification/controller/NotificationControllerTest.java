@@ -1,12 +1,13 @@
 package com.scp.dronizone.notification.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.scp.dronizone.notification.NotificationApplication;
 
@@ -22,7 +23,14 @@ import com.scp.dronizone.notification.model.entity.Order;
 @SpringBootTest(classes = NotificationApplication.class)
 public class NotificationControllerTest {
 
-	private static final String NOTIFICATION_SERVER_URL = "http://127.0.0.1:9003";
+	@Value("${server.host}")
+	private static String host;
+
+	@Value("${server.port}")
+	private static String port;
+
+	private static final UriComponentsBuilder URI_COMPONENTS_BUILDER = UriComponentsBuilder.fromHttpUrl("http://" + host + ":" + port);	
+	private static final String NOTIFICATION_SERVICE_URI = URI_COMPONENTS_BUILDER.toUriString();
 
 	protected ResponseEntity<String> responseEntity = null;
 
@@ -35,7 +43,7 @@ public class NotificationControllerTest {
 			restTemplate = new RestTemplate();
 		}
 
-		responseEntity = restTemplate.postForEntity(NOTIFICATION_SERVER_URL + "/customers", customer, String.class);
+		responseEntity = restTemplate.postForEntity(NOTIFICATION_SERVICE_URI + "/customers", customer, String.class);
 	}
 
 	protected void insertOrder(Order order) {
@@ -44,7 +52,7 @@ public class NotificationControllerTest {
 			restTemplate = new RestTemplate();
 		}
 
-		responseEntity = restTemplate.postForEntity(NOTIFICATION_SERVER_URL + "/orders", order, String.class);
+		responseEntity = restTemplate.postForEntity(NOTIFICATION_SERVICE_URI + "/orders", order, String.class);
 	}
 
 	/**
@@ -59,7 +67,7 @@ public class NotificationControllerTest {
 			restTemplate = new RestTemplate();
 		}
 
-		responseEntity = restTemplate.postForEntity(NOTIFICATION_SERVER_URL + "/notifications", notification, String.class);
+		responseEntity = restTemplate.postForEntity(NOTIFICATION_SERVICE_URI + "/notifications", notification, String.class);
 	}
 
 }

@@ -16,6 +16,7 @@ install:
 
 before_script:
   - cd dronizone-notification
+  - mvn clean package -DskipTests
   - docker-compose up --build -d
   - docker run -d -p 9103:9103 -t $DOCKER_USERNAME/dronizone:notification
 
