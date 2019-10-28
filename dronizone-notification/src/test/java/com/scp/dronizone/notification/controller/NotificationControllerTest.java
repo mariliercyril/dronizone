@@ -29,7 +29,7 @@ public class NotificationControllerTest {
 	@Autowired
 	protected RestTemplate restTemplate;
 
-	protected void post(Customer customer) {
+	protected void insertCustomer(Customer customer) {
 
 		if (restTemplate == null) {
 			restTemplate = new RestTemplate();
@@ -38,7 +38,7 @@ public class NotificationControllerTest {
 		responseEntity = restTemplate.postForEntity(NOTIFICATION_SERVER_URL + "/customers", customer, String.class);
 	}
 
-	protected void post(Order order) {
+	protected void insertOrder(Order order) {
 
 		if (restTemplate == null) {
 			restTemplate = new RestTemplate();
