@@ -13,6 +13,6 @@ import com.scp.dronizone.notification.model.entity.Order;
 public interface OrderRepository extends MongoRepository<Order, String> {
 
 	@Query("{ 'order_id' : ?0 }")
-	public Optional<Order> findByOrderId(String orderId);
+	public Optional<Order> findByOrderId(Long orderId);
 
 }

@@ -1,14 +1,14 @@
 package com.scp.dronizone.notification.model.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.data.annotation.Id;
 
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * The {@code Customer} class implements the <i>customer</i>.
+ * The {@code Customer} class represents a <b>customer</b> object.
  * 
  * @author cmarilier
  */
@@ -18,24 +18,25 @@ public class Customer {
 	@Id
 	private String id;
 
-	private String customerId;
+	@Field("customer_id")
+	@JsonProperty("customer_id")
+	private Long customerId;
 
 	private Gender gender;
 	private String name;
 
-	private List<Order> orders;
+	@SuppressWarnings("unused")
+	private Customer() {}
 
-	public Customer(String customerId, Gender gender, String name) {
+	public Customer(Long customerId, Gender gender, String name) {
 
 		this.customerId = customerId;
 
 		this.gender = gender;
 		this.name = name;
-
-		orders = new ArrayList<Order>();
 	}
 
-	public String getCustomerId() {
+	public Long getCustomerId() {
 
 		return customerId;
 	}
@@ -58,16 +59,6 @@ public class Customer {
 	public void setName(String name) {
 
 		this.name = name;
-	}
-
-	public List<Order> getOrders() {
-
-		return orders;
-	}
-
-	public void addOrder(Order order) {
-
-		orders.add(order);
 	}
 
 	public enum Gender {

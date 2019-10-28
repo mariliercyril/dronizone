@@ -14,4 +14,4 @@ services:
     links:
     - mongodb
     environment:
-    - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/notification
+    - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/dronizone

@@ -7,7 +7,8 @@ import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
 
 /**
- * The {@code NotificationServiceTest} class allows JUnit to run the Cucumber tests of as service.
+ * The {@code NotificationServiceTest} class allows JUnit to run Cucumber tests
+ * as consumers of the <b>notification</> service.
  * 
  * @author cmarilier
  */

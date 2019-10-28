@@ -1,0 +1,47 @@
+sudo: required
+
+language: java
+env:
+  - DOCKER_USERNAME=scp1920
+#  - DRONIZONE_FLEET_SERVICE_HOST=localhost
+#  - DRONIZONE_FLEET_SERVICE_PORT=9004
+#  - DRONIZONE_WAREHOUSE_SERVICE_HOST=localhost
+#  - DRONIZONE_WAREHOUSE_SERVICE_PORT=9002
+
+services:
+  - docker
+
+before_install:
+  - bash docker_login.sh $DOCKER_USERNAME $DOCKER_PASSWORD
+
+install:
+  - bash prepare.sh
+#  - docker pull $DOCKER_USERNAME/dronizone:order
+#  - docker pull $DOCKER_USERNAME/dronizone:warehouse
+#  - docker pull $DOCKER_USERNAME/dronizone:notification
+#  - docker pull $DOCKER_USERNAME/dronizone:fleet
+
+before_script:
+  - mvn clean package -DskipTests
+#  - docker run -d -p 9003:9003 -t $DOCKER_USERNAME/dronizone:notification
+#  - java -jar dronizone-order/target/dronizone-order-0.0.1-SNAPSHOT.jar &
+#  - java -jar dronizone-warehouse/target/dronizone-warehouse-0.0.1-SNAPSHOT.jar &
+#  - java -jar dronizone-fleet/target/dronizone-fleet-0.0.1-SNAPSHOT.jar &
+
+script:
+#  - cd dronizone-order
+#  - mvn test
+#  - cd ../dronizone-notification
+#  - docker-compose up --build -d
+#  - mvn test
+#  - cd ../dronizone-fleet
+#  - mvn test
+  - bash run.sh
+notifications:
+  email:
+    recipients:
+      - valentin.ah-kane@etu.univ-cotedazur.fr
+      - filipe.costa-de-sousa@etu.univ-cotedazur.fr
+      - romain.garnier@etu.univ-cotedazur.fr
+      - cyril.marilier@etu.univ-cotedazur.fr
+

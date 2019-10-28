@@ -4,24 +4,87 @@ import java.text.SimpleDateFormat;
 
 import java.util.Date;
 
-import lombok.Getter;
+import org.springframework.data.annotation.Id;
 
-@Getter
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+/**
+ * The {@code Notification} class represents a <b>notification</b> object.
+ * 
+ * @author cmarilier
+ */
+@Document(collection = "notification")
 public class Notification  {
 
 	public static final String MESSAGE_HEAD_FORMAT = "Dear %s %s,";
 
-	// Example of date with this format: "2019-10-14T20:05:00Z"
-	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-ddThh:mm:ssZ");
+	// Example of date with this format: "2019-10-14 20:05:00"
+	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-	@SuppressWarnings("unused")
+	@Id
+	private String id;
+
+	@Field("order_id")
+	@JsonProperty("order_id")
+	private Long orderId;
+
+	private Type type;
+
 	private String date;
-	@SuppressWarnings("unused")
+
+	private String reason;
+
 	private String message;
 
-	public Notification(String message) {
+	@SuppressWarnings("unused")
+	private Notification() {}
+
+	public Notification(Long orderId, Type type) {
 
 		date = SIMPLE_DATE_FORMAT.format(new Date());
+
+		this.orderId = orderId;
+		this.type = type;
+
+		message = new String();
+	}
+
+	public Notification(Long orderId, Type type, String reason) {
+
+		this(orderId, type);
+
+		this.reason = reason;
+	}
+
+	public String getDate() {
+
+		return date;
+	}
+
+	public Long getOrderId() {
+
+		return orderId;
+	}
+
+	public Type getType() {
+
+		return type;
+	}
+
+	public String getReason() {
+
+		return reason;
+	}
+
+	public String getMessage() {
+
+		return message;
+	}
+
+	public void setMessage(String message) {
 
 		this.message = message;
 	}
@@ -38,7 +101,7 @@ public class Notification  {
 			this.messageBodyFormat = messageBodyFormat;
 		}
 
-		public String getMessageFormat() {
+		public String getMessageBodyFormat() {
 
 			return messageBodyFormat;
 		}

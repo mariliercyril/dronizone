@@ -6,9 +6,12 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * The {@code CustomerOrder} class implements the <i>order</i> of {@link Customer}.
+ * The {@code Order} class represents an <b>order</b> object.
  * 
  * @author cmarilier
  */
@@ -16,30 +19,42 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Order {
 
 	@Id
-	private String _id;
+	private String id;
 
-	private String orderId;
+	@Field("order_id")
+	@JsonProperty("order_id")
+	private Long orderId;
 
-	private String customerId;
+	@Field("customer_id")
+	@JsonProperty("customer_id")
+	private Long customerId;
+
+	@Field("delivery_address")
+	@JsonProperty("delivery_address")
 	private String deliveryAddress;
 
 	private List<Notification> notifications;
 
-	public Order(String orderId, String customerId, String deliveryAddress) {
+	@SuppressWarnings("unused")
+	private Order() {}
+
+	public Order(Long orderId, Long customerId, String deliveryAddress) {
 
 		this.orderId = orderId;
 
 		this.customerId = customerId;
 
+		this.deliveryAddress = deliveryAddress;
+
 		notifications = new ArrayList<Notification>();
 	}
 
-	public String getOrderId() {
+	public Long getOrderId() {
 
 		return orderId;
 	}
 
-	public String getCustomerId() {
+	public Long getCustomerId() {
 
 		return customerId;
 	}

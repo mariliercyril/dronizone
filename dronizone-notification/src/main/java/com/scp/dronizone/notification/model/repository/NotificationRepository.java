@@ -7,12 +7,12 @@ import org.springframework.data.mongodb.repository.Query;
 
 import org.springframework.stereotype.Repository;
 
-import com.scp.dronizone.notification.model.entity.Customer;
+import com.scp.dronizone.notification.model.entity.Notification;
 
 @Repository
-public interface CustomerRepository extends MongoRepository<Customer, String> {
+public interface NotificationRepository extends MongoRepository<Notification, String> {
 
-	@Query("{ 'customer_id' : ?0 }")
-	public Optional<Customer> findByCustomerId(Long customerId);
+	@Query("{ 'order_id' : ?0 }")
+	public Optional<Notification> findByOrderId(Long orderId);
 
 }
