@@ -21,7 +21,7 @@ before_script:
   - docker run -d -p 9103:9103 -t $DOCKER_USERNAME/dronizone:notification
 
 script:
-  - mvn test
+# - mvn test
 
 notifications:
   email:
