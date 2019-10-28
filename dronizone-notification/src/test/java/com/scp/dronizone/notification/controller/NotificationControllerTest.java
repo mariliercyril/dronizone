@@ -22,7 +22,7 @@ import com.scp.dronizone.notification.model.entity.Order;
 @SpringBootTest(classes = NotificationApplication.class)
 public class NotificationControllerTest {
 
-	private static final String NOTIFICATION_SERVER_URL = "http://mongodb:27017";
+	private static final String NOTIFICATION_SERVER_URL = "http://127.0.0.1:9003";
 
 	protected ResponseEntity<String> responseEntity = null;
 
