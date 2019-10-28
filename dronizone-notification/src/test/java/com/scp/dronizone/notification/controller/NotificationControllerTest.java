@@ -31,6 +31,8 @@ public class NotificationControllerTest {
 
 	private UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl("http://" + host + ":" + port);	
 	private String notificationServiceUri = uriComponentsBuilder.toUriString();
+	//
+	private String uri = "http://dronizone:9003";
 
 	protected ResponseEntity<String> responseEntity = null;
 
@@ -43,7 +45,7 @@ public class NotificationControllerTest {
 			restTemplate = new RestTemplate();
 		}
 
-		responseEntity = restTemplate.postForEntity(notificationServiceUri + "/customers", customer, String.class);
+		responseEntity = restTemplate.postForEntity(uri + "/customers", customer, String.class);
 	}
 
 	protected void insertOrder(Order order) {
@@ -52,7 +54,7 @@ public class NotificationControllerTest {
 			restTemplate = new RestTemplate();
 		}
 
-		responseEntity = restTemplate.postForEntity(notificationServiceUri + "/orders", order, String.class);
+		responseEntity = restTemplate.postForEntity(uri + "/orders", order, String.class);
 	}
 
 	/**
@@ -67,7 +69,7 @@ public class NotificationControllerTest {
 			restTemplate = new RestTemplate();
 		}
 
-		responseEntity = restTemplate.postForEntity(notificationServiceUri + "/notifications", notification, String.class);
+		responseEntity = restTemplate.postForEntity(uri + "/notifications", notification, String.class);
 	}
 
 }
