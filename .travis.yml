@@ -8,10 +8,10 @@ services:
 install:
   - mvn clean install -DskipTests
 
-script:
+before_script:
   - cd dronizone-notification
 
-before_script:
+script:
   - docker-compose up --build -d
 
 notifications:
