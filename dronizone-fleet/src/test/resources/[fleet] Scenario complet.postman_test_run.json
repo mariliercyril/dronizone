@@ -1,0 +1,494 @@
+{
+	"id": "cb283a64-61d9-42a3-b13f-15b4c8ef3604",
+	"name": "[fleet] Scenario complet",
+	"allTests": [],
+	"timestamp": "2019-10-26T19:23:12.966Z",
+	"collection_id": "c43a91a0-3521-4ff8-b76c-279769aed215",
+	"folder_id": 0,
+	"target_type": "collection",
+	"environment_id": "0",
+	"data": [],
+	"delay": 0,
+	"count": 1,
+	"collection": {
+		"id": "c43a91a0-3521-4ff8-b76c-279769aed215",
+		"name": "[fleet] Scenario complet",
+		"order": [
+			"f4bd9ebd-a019-4aa2-a22f-2c2e527eae37",
+			"a54bbc79-23dd-4d25-8e10-d971715a33c9",
+			"b845c56e-1890-4cad-aed3-766b6feb5283",
+			"1c9a14a4-c174-4b93-9540-008ea15e9e18",
+			"800b6367-bd67-4756-9b85-67ddb5552d71",
+			"4f506b03-df02-4888-8bbc-80abef1cc60d",
+			"833dbd1d-1b3c-4de0-97d7-0d812914ebac"
+		],
+		"folders_order": [],
+		"isFavorite": false
+	},
+	"folder": null,
+	"environment": null,
+	"globals": [
+		{
+			"key": "id0",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "id1",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "id2",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "assignedDroneId",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "arrD",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "randomD",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "collD",
+			"value": "",
+			"enabled": true
+		}
+	],
+	"results": [
+		{
+			"name": "RESET (vider BD Drones + télémétrie",
+			"id": "f4bd9ebd-a019-4aa2-a22f-2c2e527eae37",
+			"url": "localhost:9004/fleet/drones/reset",
+			"totalTime": 0,
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"tests": {
+				"response is ok": true
+			},
+			"testPassFailCounts": {
+				"response is ok": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				"91"
+			],
+			"allTests": [
+				{
+					"response is ok": true
+				}
+			],
+			"time": "91",
+			"totalRequestTime": "91",
+			"iterationResults": {}
+		},
+		{
+			"name": "PUT collection ARRAY",
+			"id": "a54bbc79-23dd-4d25-8e10-d971715a33c9",
+			"url": "localhost:9004/fleet/drones",
+			"totalTime": 0,
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"tests": {
+				"response is ok": true,
+				"tous les Drones sont identiques à que ceux push": true
+			},
+			"testPassFailCounts": {
+				"response is ok": {
+					"pass": 1,
+					"fail": 0
+				},
+				"tous les Drones sont identiques à que ceux push": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				"63"
+			],
+			"allTests": [
+				{
+					"response is ok": true,
+					"tous les Drones sont identiques à que ceux push": true
+				}
+			],
+			"time": "63",
+			"totalRequestTime": "63",
+			"iterationResults": {}
+		},
+		{
+			"name": "POST newD",
+			"id": "b845c56e-1890-4cad-aed3-766b6feb5283",
+			"url": "localhost:9004/fleet/drones",
+			"totalTime": 0,
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"tests": {
+				"response is ok": true,
+				"le Drone est correctement reçu (attributs renseignés identiques)": true
+			},
+			"testPassFailCounts": {
+				"response is ok": {
+					"pass": 1,
+					"fail": 0
+				},
+				"le Drone est correctement reçu (attributs renseignés identiques)": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				"6"
+			],
+			"allTests": [
+				{
+					"response is ok": true,
+					"le Drone est correctement reçu (attributs renseignés identiques)": true
+				}
+			],
+			"time": "6",
+			"totalRequestTime": "6",
+			"iterationResults": {}
+		},
+		{
+			"name": "GET all",
+			"id": "1c9a14a4-c174-4b93-9540-008ea15e9e18",
+			"url": "localhost:9004/fleet/drones",
+			"totalTime": 0,
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"tests": {
+				"response is ok": true,
+				"Il y a le bon nombre de Drones dans la BD (flemme de les checker 1 par 1 car déjà fait dans PUT ARRAY)": true
+			},
+			"testPassFailCounts": {
+				"response is ok": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Il y a le bon nombre de Drones dans la BD (flemme de les checker 1 par 1 car déjà fait dans PUT ARRAY)": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				"5"
+			],
+			"allTests": [
+				{
+					"response is ok": true,
+					"Il y a le bon nombre de Drones dans la BD (flemme de les checker 1 par 1 car déjà fait dans PUT ARRAY)": true
+				}
+			],
+			"time": "5",
+			"totalRequestTime": "5",
+			"iterationResults": {}
+		},
+		{
+			"name": "Assign random order ID",
+			"id": "800b6367-bd67-4756-9b85-67ddb5552d71",
+			"url": "localhost:9004/fleet/assign?orderid=Credit Card Account generate aggregate user-facing",
+			"totalTime": 0,
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"tests": {
+				"response is ok": true
+			},
+			"testPassFailCounts": {
+				"response is ok": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				"8"
+			],
+			"allTests": [
+				{
+					"response is ok": true
+				}
+			],
+			"time": "8",
+			"totalRequestTime": "8",
+			"iterationResults": {}
+		},
+		{
+			"name": "wait 6 secondes",
+			"id": "4f506b03-df02-4888-8bbc-80abef1cc60d",
+			"url": "localhost:9004/fleet/",
+			"totalTime": 0,
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"tests": {
+				"response is ok": true
+			},
+			"testPassFailCounts": {
+				"response is ok": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				"4"
+			],
+			"allTests": [
+				{
+					"response is ok": true
+				}
+			],
+			"time": "4",
+			"totalRequestTime": "4",
+			"iterationResults": {}
+		},
+		{
+			"name": "GET all telemetry by D's ID",
+			"id": "833dbd1d-1b3c-4de0-97d7-0d812914ebac",
+			"url": "localhost:9004/fleet/drones/390/positions",
+			"totalTime": 0,
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"tests": {
+				"response is ok": true,
+				"Le drone a livré (5 bonds).": true
+			},
+			"testPassFailCounts": {
+				"response is ok": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Le drone a livré (5 bonds).": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				"9"
+			],
+			"allTests": [
+				{
+					"response is ok": true,
+					"Le drone a livré (5 bonds).": true
+				}
+			],
+			"time": "9",
+			"totalRequestTime": "9",
+			"iterationResults": {}
+		}
+	],
+	"totalPass": 11,
+	"totalFail": 0,
+	"totalTime": 186,
+	"lifecycle": "done",
+	"requests": [
+		{
+			"name": "RESET (vider BD Drones + télémétrie",
+			"id": "f4bd9ebd-a019-4aa2-a22f-2c2e527eae37",
+			"url": "localhost:9004/fleet/drones/reset",
+			"time": "2019-10-26T19:23:12.966Z",
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"testPassFailCounts": {
+				"response is ok": {
+					"pass": 1,
+					"fail": 0
+				}
+			}
+		},
+		{
+			"name": "PUT collection ARRAY",
+			"id": "a54bbc79-23dd-4d25-8e10-d971715a33c9",
+			"url": "localhost:9004/fleet/drones",
+			"time": "2019-10-26T19:23:12.966Z",
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"testPassFailCounts": {
+				"response is ok": {
+					"pass": 1,
+					"fail": 0
+				},
+				"tous les Drones sont identiques à que ceux push": {
+					"pass": 1,
+					"fail": 0
+				}
+			}
+		},
+		{
+			"name": "POST newD",
+			"id": "b845c56e-1890-4cad-aed3-766b6feb5283",
+			"url": "localhost:9004/fleet/drones",
+			"time": "2019-10-26T19:23:12.966Z",
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"testPassFailCounts": {
+				"response is ok": {
+					"pass": 1,
+					"fail": 0
+				},
+				"le Drone est correctement reçu (attributs renseignés identiques)": {
+					"pass": 1,
+					"fail": 0
+				}
+			}
+		},
+		{
+			"name": "GET all",
+			"id": "1c9a14a4-c174-4b93-9540-008ea15e9e18",
+			"url": "localhost:9004/fleet/drones",
+			"time": "2019-10-26T19:23:12.966Z",
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"testPassFailCounts": {
+				"response is ok": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Il y a le bon nombre de Drones dans la BD (flemme de les checker 1 par 1 car déjà fait dans PUT ARRAY)": {
+					"pass": 1,
+					"fail": 0
+				}
+			}
+		},
+		{
+			"name": "Assign random order ID",
+			"id": "800b6367-bd67-4756-9b85-67ddb5552d71",
+			"url": "localhost:9004/fleet/assign?orderid=Credit Card Account generate aggregate user-facing",
+			"time": "2019-10-26T19:23:12.966Z",
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"testPassFailCounts": {
+				"response is ok": {
+					"pass": 1,
+					"fail": 0
+				}
+			}
+		},
+		{
+			"name": "wait 6 secondes",
+			"id": "4f506b03-df02-4888-8bbc-80abef1cc60d",
+			"url": "localhost:9004/fleet/",
+			"time": "2019-10-26T19:23:12.966Z",
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"testPassFailCounts": {
+				"response is ok": {
+					"pass": 1,
+					"fail": 0
+				}
+			}
+		},
+		{
+			"name": "GET all telemetry by D's ID",
+			"id": "833dbd1d-1b3c-4de0-97d7-0d812914ebac",
+			"url": "localhost:9004/fleet/drones/390/positions",
+			"time": "2019-10-26T19:23:12.966Z",
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"testPassFailCounts": {
+				"response is ok": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Le drone a livré (5 bonds).": {
+					"pass": 1,
+					"fail": 0
+				}
+			}
+		}
+	],
+	"synced": false
+}

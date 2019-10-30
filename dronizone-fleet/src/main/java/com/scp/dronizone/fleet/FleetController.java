@@ -1,17 +1,12 @@
 package com.scp.dronizone.fleet;
 
-import com.scp.dronizone.fleet.entity.Drone;
-import com.scp.dronizone.fleet.entity.DroneManager;
-import com.scp.dronizone.fleet.entity.Order;
+import com.scp.dronizone.fleet.entity.*;
 import com.scp.dronizone.fleet.states.DroneBatteryState;
 import com.scp.dronizone.fleet.states.DroneState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,9 +18,12 @@ import javax.servlet.http.HttpServletRequest;
 public class FleetController {
     private static final Logger LOG = LoggerFactory.getLogger(FleetController.class);
 
+    @Value("${fleet.service.url}")
+    String FLEET_SERVICE_URL;
 
-    @Value("${order.service.url}")
-    private String ORDER_SERVICE_URL;
+    @Value("${notification.service.url}")
+    String NOTIFICATION_SERVICE_URL;
+
 
     /**
      * Prouve que le Service est en ligne
@@ -35,7 +33,7 @@ public class FleetController {
      */
     @RequestMapping({"", "/", "/connected"})
     public String home(HttpServletRequest request) {
-        LOG.warn("Request on " + request.getRequestURI() + "?" + request.getQueryString());
+        LOG.warn("Request on " + request.getRequestURI() + ((request.getQueryString() == null) ? "" : ("?" + request.getQueryString())));
         return "Connected !";
     }
 
@@ -44,8 +42,7 @@ public class FleetController {
      * todo plutôt pour tester/debug, pour l'US#4 on ne veut QUE le niveau de batterie,
      *  mais je me dis que si un drone EN COURS DE LIVRAISON est en batterie LOW... on veut pas lui faire faire demi-tour
      *
-     * @param {int} id
-     *  ID du Drone à trouver dans la BD
+     * @param id ID du Drone à trouver dans la BD
      *
      * @return {JSON/Drone}
      *  Le Drone, s'il existe, au format JSON
@@ -53,7 +50,7 @@ public class FleetController {
     @GetMapping(path = "/drones/{id}")
     public @ResponseBody
     Drone getDroneById(@PathVariable("id") int id, HttpServletRequest request) {
-        LOG.warn("Request on " + request.getRequestURI() + "?" + request.getQueryString());
+        LOG.warn("Request on " + request.getRequestURI() + ((request.getQueryString() == null) ? "" : ("?" + request.getQueryString())));
         LOG.info("Trying to retrieve the Drone with ID: " + id + " from the DB...");
         Drone zeDrone = DroneManager.getDroneById(id);
         if (zeDrone != null)
@@ -66,8 +63,7 @@ public class FleetController {
     /**
      * Récupérer le niveau de Battery d'un Drone via son ID
      *
-     * @param {int} id
-     *  ID du drone à récupérer
+     * @param id ID du drone à récupérer
      *
      * @return {DroneBatteryState|null}
      *  le niveau de Battery du Drone recherché ou null s'il n'existe pas dans la "BD" (HashMap)
@@ -75,7 +71,7 @@ public class FleetController {
     @GetMapping(path = "/drones/{id}/battery")
     public @ResponseBody
     DroneBatteryState getDroneBatteryById(@PathVariable("id") int id, HttpServletRequest request) {
-        LOG.warn("Request on " + request.getRequestURI() + "?" + request.getQueryString());
+        LOG.warn("Request on " + request.getRequestURI() + ((request.getQueryString() == null) ? "" : ("?" + request.getQueryString())));
         LOG.info("Trying to retrieve the Drone with ID: " + id + "'s battery status from the DB...");
         Drone zeDrone = DroneManager.getDroneById(id);
         if (zeDrone != null)
@@ -88,12 +84,11 @@ public class FleetController {
     /**
      * Récupérer l'intégralité de la BD
      *
-     * @return {Collection<Drone>}
-     *  L'ensemble de la DB sous forme de collection, JSON Array par défaut
+     * @return L'ensemble de la DB sous forme de collection, JSON Array par défaut
      */
     @GetMapping(path = "/drones")
     public @ResponseBody Iterable<Drone> getAllDrones(HttpServletRequest request) {
-        LOG.warn("Request on " + request.getRequestURI() + "?" + request.getQueryString());
+        LOG.warn("Request on " + request.getRequestURI() + ((request.getQueryString() == null) ? "" : ("?" + request.getQueryString())));
         return DroneManager.getAllDrones();
     }
 
@@ -104,21 +99,20 @@ public class FleetController {
      *  Envisager de trigger une MàJ du niveau de batterie lors du changement de cet attr, etc...
      *
      *
-     * @param {int} id
-     *  ID du drone à récupérer
+     * @param id ID du drone à récupérer
      *
-     * @return {Drone} le Drone
+     * @return le Drone
      */
     @GetMapping(path = "/drones/{id}/deactivate")
     public @ResponseBody
     Drone deactivateDrone(@PathVariable("id") int id, HttpServletRequest request) {
-        LOG.warn("Request on " + request.getRequestURI() + "?" + request.getQueryString());
+        LOG.warn("Request on " + request.getRequestURI() + ((request.getQueryString() == null) ? "" : ("?" + request.getQueryString())));
         return updateDroneStateAttribute(id, DroneState.RECHARGING);
     }
     @GetMapping(path = "/drones/{id}/activate")
     public @ResponseBody
     Drone activateDrone(@PathVariable("id") int id, HttpServletRequest request) {
-        LOG.warn("Request on " + request.getRequestURI() + "?" + request.getQueryString());
+        LOG.warn("Request on " + request.getRequestURI() + ((request.getQueryString() == null) ? "" : ("?" + request.getQueryString())));
         return updateDroneStateAttribute(id, DroneState.AVAILABLE);
     }
     /**
@@ -127,13 +121,11 @@ public class FleetController {
      * Flemme de recopier ça deux fois donc j'en fait une fonction
      *  (pas d'imagination pour une route autre que POST... mais quelque chose comme "/set?attr=&value=" ou je sais pas...
      *
-     * @param {int} id
-     *  ID du drone à récupérer
+     * @param id ID du drone à récupérer
      *
-     * @param {DroneState} newState
-     *  nouvel état
+     * @param newState nouvel état
      *
-     * @return {Drone} le Drone
+     * @return le Drone
      */
     public Drone updateDroneStateAttribute(int id, DroneState newState) {
         Drone zeDrone = DroneManager.getDroneById(id);
@@ -144,9 +136,9 @@ public class FleetController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Drone #" + id + " not found");
     }
 
-    @GetMapping(path = "/drones/totalrecall")
+    @GetMapping({"/drones/totalrecall", "/drones/recall"})
     public @ResponseBody String emergencyRecallAllDeliveringDrones(HttpServletRequest request) {
-        LOG.warn("Request on " + request.getRequestURI() + "?" + request.getQueryString());
+        LOG.warn("Request on " + request.getRequestURI() + ((request.getQueryString() == null) ? "" : ("?" + request.getQueryString())));
         DroneManager.recallAllActiveDrones();
         return "Done."; // 200
     }
@@ -154,18 +146,14 @@ public class FleetController {
     /**
      * Ajouter un nouveau Drone à la HashMap
      *
-     * @param {Drone} drone
-     *  le Drone a ajouter
+     * @param drone le Drone a ajouter
      *
-     * @param {HttpServletRequest} request
-     *
-     * @return {Drone}
-     *  le Drone ajouté
+     * @return le Drone ajouté
      */
     @PostMapping("/drones")
     public @ResponseBody
     Drone addNewDrone(@RequestBody Drone drone, HttpServletRequest request) throws Exception {
-        LOG.info("Request on " + request.getRequestURI() + "?" + request.getQueryString());
+        LOG.warn("Request on " + request.getRequestURI() + ((request.getQueryString() == null) ? "" : ("?" + request.getQueryString())));
         LOG.info("Trying to add\n" + drone.toString());
 
         try {
@@ -180,20 +168,20 @@ public class FleetController {
      * Vider la HashMap
      *  utile pour les tests
      *
-     * @return
-     *  la HashMap (sera donc un Array vide, servant de "preuve")
+     * @return la HashMap (sera donc un Array vide, servant de "preuve")
      */
     @RequestMapping ("/drones/reset")
     public @ResponseBody Iterable<Drone> removeAllDrones(HttpServletRequest request) {
-        LOG.warn("Request on " + request.getRequestURI() + "?" + request.getQueryString());
+        LOG.warn("Request on " + request.getRequestURI() + ((request.getQueryString() == null) ? "" : ("?" + request.getQueryString())));
         DroneManager.resetDrones();
+        DroneManager.resetDronesTelemetry();
         return DroneManager.getAllDrones();
     }
 
     // TODO ajouter une route pour PUT un Array de Drone --> remplacer la base
     @RequestMapping(path = "/drones", method = RequestMethod.PUT)
     public @ResponseBody Iterable<Drone> setWholeDroneDatabase(@RequestBody Iterable<Drone> drones, HttpServletRequest request) {
-        LOG.warn("\nRequest on " + request.getRequestURI() + "?" + request.getQueryString());
+        LOG.warn("Request on " + request.getRequestURI() + ((request.getQueryString() == null) ? "" : ("?" + request.getQueryString())));
         LOG.warn("\nRequestBody:");
         for (Drone drone: drones) {
             LOG.info("\n" + drone.toString());
@@ -207,26 +195,56 @@ public class FleetController {
     }
 
     /**
-     * Echo/Marco-Polo
-     * Renvoie l'Objet reçu
-     * pour debug
-     * @// TODO: 18/10/2019 supprimer
-     * @param received Le message reçu
-     * @return {Object}
+     * Assigner un Drone à un colis
+     * Parce qu'on suppose qu'il y a toujours des Drones de disponible, si ça n'est pas le cas
+     * @param order ID de l'Order à livrer
+     * @return le Drone affecté à la livraison,
+     * ou une erreur si aucun n'est disponible (osef de la file d'attente. byebye le colis)
+     * todo le service doit soit avoir une file d'attente, soit demander régulièrement à la BD si des livraisons sont à faire
+     *  /drones/assign plutôt non ???
      */
-    @RequestMapping(path = "/marco")
-    public @ResponseBody Object polo(@RequestBody Object received) {
-        return received;
+    @PostMapping("/assign")
+    public @ResponseBody Drone assignNewOrder(@RequestBody Order order, HttpServletRequest request) throws Exception {
+        LOG.warn("Request on " + request.getRequestURI() + ((request.getQueryString() == null) ? "" : ("?" + request.getQueryString())) );
+
+        // Trouver un Drone disponible pour une livraison (ne doit pas être en train de se recharger !RECHARGING et ne doit pas déjà être en cours de livraison) ?
+        Drone drone = DroneManager.getOneAvailableDrone();
+        return DroneManager.assignOrderIdToDroneById(order, drone.getId(), FLEET_SERVICE_URL);
     }
 
-    @PostMapping("/assign")
-    public Drone assignNewOrder(@RequestBody Order order){
-        Drone drone = DroneManager.assignOrderToDrone(order);
+    // todo ajouter une route PUT juste pour init les tests ?
+    @PostMapping("/drones/{id}/positions")
+    public @ResponseBody DronePosition logNewDronePosition(@PathVariable("id") int droneId, @RequestBody DronePosition newPosition, HttpServletRequest request) {
+        LOG.warn("Request on " + request.getRequestURI() + ((request.getQueryString() == null) ? "" : ("?" + request.getQueryString())) );
+        return DroneManager.logNewDronePosition(droneId, newPosition);
+    }
 
-        RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<Order> request = new HttpEntity<Order>(order);
-        ResponseEntity<String> response = restTemplate.exchange("http://"+ORDER_SERVICE_URL+ "/orders/"+order.getIdOrder(), HttpMethod.PUT, request, String.class);
+    /**
+     * Récupérer la position
+     * @param droneId
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/drones/{id}/positions")
+    public @ResponseBody DronePosition[] getDronePositions(@PathVariable("id") int droneId, HttpServletRequest request) throws Exception {
+        LOG.warn("Request on " + request.getRequestURI() + ((request.getQueryString() == null) ? "" : ("?" + request.getQueryString())) );
+        return DroneManager.getDronePositions(droneId);
+    }
 
-        return drone;
+    /**
+     * Demander à FleetService d'envoyer une Notification à NotificationService
+     * @param notification Notification à envoyer. Contient les attributs Type (soon/recall) et Order (ID)
+     * @return OK au Drone pour signaler la bonne réception de la requête
+     */
+    @PostMapping("/notifications")
+    public String notifyCustomer(@RequestBody Notification notification, HttpServletRequest request) {
+        LOG.warn("Request on " + request.getRequestURI() + ((request.getQueryString() == null) ? "" : ("?" + request.getQueryString())));
+
+        // Aucune vérification particulière ?
+        new RestTemplate().postForEntity("http://" + NOTIFICATION_SERVICE_URL + "/notifications", notification, String.class).getBody();
+
+        // OK message (on n'informe pas le Drone si la notification n'est pas proprement retransmise.
+        // Ce qui compte c'est de dire "j'ai bien reçu ton message" au Drone)
+        return "Your notification was received and is being transmitted...";
     }
 }

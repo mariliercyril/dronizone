@@ -1,0 +1,547 @@
+{
+	"info": {
+		"_postman_id": "fa1fd9d4-be20-414a-bec7-a07af96a4c58",
+		"name": "[fleet] Scenario complet + recall",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "RESET (vider BD Drones + télémétrie",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "62e3da4f-2bff-47f8-ba07-2a46d562a722",
+						"exec": [
+							"/**",
+							" * TESTS",
+							" */",
+							"// 200",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:9004/fleet/drones/reset",
+					"host": [
+						"localhost"
+					],
+					"port": "9004",
+					"path": [
+						"fleet",
+						"drones",
+						"reset"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT collection ARRAY",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "300f738e-0c51-4597-a8ea-aead2746d67e",
+						"exec": [
+							"function D () {",
+							"    var randomD = {};",
+							"    let enumBattery = [\"FULL\", \"OK\", \"LOW\"];",
+							"    let enumStates = [\"AVAILABLE\", \"RECHARGING\", \"DELIVERING\", \"FORCED_RETURNING\"];",
+							"    ",
+							"    randomD.id = Math.floor(Math.random() * 2000);",
+							"    randomD.batteryState = enumBattery[Math.floor(Math.random() * enumBattery.length)];",
+							"    randomD.status = enumStates[Math.floor(Math.random() * enumStates.length)];",
+							"    ",
+							"    return randomD;",
+							"}",
+							"",
+							"var arrD = [],",
+							"    nbDrones = 15;",
+							"",
+							"// Ajouter 1 Drone AVAILABLE",
+							"let avD = D();",
+							"avD.status = \"AVAILABLE\";",
+							"arrD.push(avD);",
+							"",
+							"// Générer nbDrones random D",
+							"for (let i=0; i<nbDrones; ++i) {",
+							"    arrD.push(D());",
+							"}",
+							"",
+							"",
+							"var collD = {};",
+							"for (let d of arrD) {",
+							"    collD[d.id] = d;",
+							"}",
+							"",
+							"// stocker",
+							"pm.globals.set(\"arrD\", JSON.stringify((arrD)));",
+							"",
+							"pm.globals.set(\"collD\", JSON.stringify((collD)));",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "9989966f-98e2-4d43-b818-d202c68686c0",
+						"exec": [
+							"let responseArrD = JSON.parse(responseBody),",
+							"    arrD = JSON.parse(pm.globals.get(\"arrD\"));",
+							"",
+							"let idResponseArrD = responseArrD.reduce((obj, item) => {",
+							"     obj[item.id] = {",
+							"         id: item.id,",
+							"         batteryState: item.batteryState,",
+							"         status: item.status",
+							"     } // je mets pas l'objet entier car le Service complète les attributs des Drones que je n'ai pas mis (genre position etc...)",
+							"     return obj",
+							"   }, {}),",
+							"   ",
+							"   idArrD = arrD.reduce((obj, item) => {",
+							"     obj[item.id] = {",
+							"         id: item.id,",
+							"         batteryState: item.batteryState,",
+							"         status: item.status",
+							"     } // je mets pas l'objet entier car le Service complète les attributs des Drones que je n'ai pas mis (genre position etc...)",
+							"     return obj",
+							"   }, {});",
+							"",
+							"console.log(\"idResponseArrD\", idResponseArrD);",
+							"console.log(\"idArrD\", idArrD);",
+							"",
+							"/**",
+							" * TESTS",
+							" */",
+							"// 200",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"// Check que les mêmes clefs sont présentes des deux côtés",
+							"pm.test(\"tous les Drones sont identiques à que ceux push\", function () {",
+							"    pm.expect(idArrD).to.eql(idResponseArrD);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{{arrD}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9004/fleet/drones",
+					"host": [
+						"localhost"
+					],
+					"port": "9004",
+					"path": [
+						"fleet",
+						"drones"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST newD",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "425b6821-6729-4007-9165-334142f0a47e",
+						"exec": [
+							"function D () {",
+							"    var randomD = {};",
+							"    let enumBattery = [\"FULL\", \"OK\", \"LOW\"];",
+							"    let enumStates = [\"AVAILABLE\", \"RECHARGING\", \"DELIVERING\", \"FORCED_RETURNING\"];",
+							"    ",
+							"    randomD.id = parseInt(new Date().getSeconds() + \"\" + new Date().getMilliseconds());",
+							"    randomD.batteryState = enumBattery[Math.floor(Math.random() * enumBattery.length)];",
+							"    randomD.status = enumStates[Math.floor(Math.random() * enumStates.length)];",
+							"",
+							"    return randomD;",
+							"}",
+							"",
+							"// Save globally",
+							"postman.setEnvironmentVariable(\"D\", D);",
+							"",
+							"// let myD = D();",
+							"var parsedFunc = eval(\"(\" + environment.D +\")\");",
+							"var myD = parsedFunc();",
+							"// sauvegarder le Drone pour la suite du scénario ",
+							"pm.globals.set(\"randomD\", JSON.stringify((myD)));"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "ff7902cc-78dd-4ac2-9109-119652ed1f3f",
+						"exec": [
+							"// Save globally",
+							"let postedD = JSON.parse(pm.globals.get(\"randomD\")),",
+							"    responseD = JSON.parse(responseBody);",
+							"",
+							"/**",
+							" * TESTS",
+							" */",
+							"// 200",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"// Check que les mêmes clefs sont présentes des deux côtés",
+							"pm.test(\"le Drone est correctement reçu (attributs renseignés identiques)\", function () {",
+							"    pm.expect(postedD.id).to.eql(responseD.id);",
+							"    pm.expect(postedD.batteryState).to.eql(responseD.batteryState);",
+							"    pm.expect(postedD.status).to.eql(responseD.status);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{{randomD}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9004/fleet/drones",
+					"host": [
+						"localhost"
+					],
+					"port": "9004",
+					"path": [
+						"fleet",
+						"drones"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET all",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "21ff4dfb-3f81-4184-a037-aa1c38cf512e",
+						"exec": [
+							"let responseDrones = JSON.parse(responseBody);",
+							"console.log(\"responseDrones\", responseDrones);",
+							"",
+							"console.log(pm.globals.get(\"arrD\"));",
+							"",
+							"let arrD = JSON.parse(pm.globals.get(\"arrD\"));",
+							"",
+							"",
+							"/**",
+							" * TESTS",
+							" */",
+							"// 200",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"// Check que les mêmes clefs sont présentes des deux côtés",
+							"pm.test(\"Il y a le bon nombre de Drones dans la BD (flemme de les checker 1 par 1 car déjà fait dans PUT ARRAY)\", function () {",
+							"    pm.expect(arrD.length+1).to.eql(responseDrones.length);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:9004/fleet/drones",
+					"host": [
+						"localhost"
+					],
+					"port": "9004",
+					"path": [
+						"fleet",
+						"drones"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Assign random order ID",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d86d3489-b868-4c28-8be4-8dd62d7bf6fe",
+						"exec": [
+							"function makeid(length) {\r",
+							"   var result           = '';\r",
+							"   var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';\r",
+							"   var charactersLength = characters.length;\r",
+							"   for ( var i = 0; i < length; i++ ) {\r",
+							"      result += characters.charAt(Math.floor(Math.random() * charactersLength));\r",
+							"   }\r",
+							"   return result;\r",
+							"}\r",
+							"\r",
+							"let orderid = makeid(8);\r",
+							"\r",
+							"postman.setEnvironmentVariable(\"orderid\", JSON.stringify(orderid));\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "9013b841-9bd1-463d-82ce-11773c5c5b08",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"let assignedDroneId = jsonData[\"id\"];",
+							"",
+							"console.log(\"jsonData\", jsonData);",
+							"console.log(\"assignedDroneId\", assignedDroneId);",
+							"",
+							"pm.globals.set(\"assignedDroneId\", assignedDroneId);",
+							"",
+							"",
+							"/**",
+							" * TESTS",
+							" */",
+							"// 200",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:9004/fleet/assign?orderid={{$randomWords}}",
+					"host": [
+						"localhost"
+					],
+					"port": "9004",
+					"path": [
+						"fleet",
+						"assign"
+					],
+					"query": [
+						{
+							"key": "orderid",
+							"value": "{{$randomWords}}"
+						}
+					]
+				},
+				"description": "localhost:9004/fleet/assign?orderid={{$randomWords}}"
+			},
+			"response": []
+		},
+		{
+			"name": "wait 2 secondes",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "094029e1-99bf-4a43-a459-dfad72343912",
+						"exec": [
+							"let assignedDroneId = pm.globals.get(\"variable_key\");\r",
+							"\r",
+							"// Attendre 2s avant d'interrompre la livraison (toutes, mais qu'une seule a réellement un thread qui tourne)\r",
+							"setTimeout(function(){}, 2000);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "2a469ead-cc0c-4cd2-9758-b2963aeead50",
+						"exec": [
+							"/**",
+							" * TESTS",
+							" */",
+							"// 200",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:9004/fleet/drones/{{assignedDroneId}}/positions",
+					"host": [
+						"localhost"
+					],
+					"port": "9004",
+					"path": [
+						"fleet",
+						"drones",
+						"{{assignedDroneId}}",
+						"positions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Rappeler tous les Drones",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "63e8ce50-df20-48fb-ba31-064d909fe00c",
+						"exec": [
+							"/**",
+							" * TESTS",
+							" */",
+							"// 200",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:9004/fleet/drones/totalrecall",
+					"host": [
+						"localhost"
+					],
+					"port": "9004",
+					"path": [
+						"fleet",
+						"drones",
+						"totalrecall"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET all telemetry by D's ID",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "094029e1-99bf-4a43-a459-dfad72343912",
+						"exec": [
+							"let assignedDroneId = pm.globals.get(\"assignedDroneId\");",
+							"",
+							"console.log(\"assignedDroneId\", assignedDroneId);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "80a79c77-59ef-48fe-a4ef-ef34ca58e152",
+						"exec": [
+							"let telemetry = JSON.parse(responseBody);",
+							"",
+							"/**",
+							" * TESTS",
+							" */",
+							"// 200",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Le drone n'a pas livré (<5 bonds).\", function () {",
+							"    pm.expect(telemetry.length<5).to.be.true;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:9004/fleet/drones/:droneId/positions",
+					"host": [
+						"localhost"
+					],
+					"port": "9004",
+					"path": [
+						"fleet",
+						"drones",
+						":droneId",
+						"positions"
+					],
+					"variable": [
+						{
+							"key": "droneId",
+							"value": "{{assignedDroneId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

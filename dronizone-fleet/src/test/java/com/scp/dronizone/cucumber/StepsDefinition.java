@@ -94,6 +94,8 @@ public class StepsDefinition {
         Drone drone = new Drone();
         drone.setId(droneId);
 
+        System.out.println("\n\n\n\ndrone:" + drone);
+
         // Pas de persistence --> on doit "POST" le Drone pour le test
         // todo ? Préparer la BD nécessaire à tous les scenarios dans le @Before ?
         //  Et si un a besoin que la BD soit vide, on lui fait un @Before specific / on le vide durant le test
