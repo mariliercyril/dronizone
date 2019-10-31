@@ -13,8 +13,10 @@ docker pull scp1920/dronizone:fleet
 
 docker-compose up -d
 
-docker build -t scenario_1 ./demo/
+docker build -t verify_services ./demo/
+
+docker build -t scenario_1 ./demo/scenario/
 
 echo Lancement des services...
 
-sleep 10
+docker run --network=dronizone1920scp1920_dronizone-net verify_services

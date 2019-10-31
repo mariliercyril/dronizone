@@ -7,8 +7,8 @@ ENV DRONIZONE_WAREHOUSE_SERVICE_PORT 9002
 ENV DRONIZONE_FLEET_SERVICE_HOST fleet
 ENV DRONIZONE_FLEET_SERVICE_PORT 9004
 
-ADD verify_services.py /
+ADD scenario_1.py /
 
 RUN pip install requests
 
-CMD [ "python", "./verify_services.py" ]
+CMD [ "python", "./scenario_1.py" ]
