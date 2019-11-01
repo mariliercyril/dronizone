@@ -1,11 +1,13 @@
-package com.scp.dronizone.order;
+package com.scp.dronizone;
 
 import com.scp.dronizone.order.entity.Item;
 import com.scp.dronizone.order.entity.Order;
 import com.scp.dronizone.order.entity.OrderManager;
-import com.scp.dronizone.order.entity.Warehouse;
+
+import com.scp.dronizone.repository.OrderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -14,12 +16,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
+
+    @Autowired
+    private final OrderRepository orderRepository;
+
+    @Autowired
+    private final OrderManager orderManager;
+
     private static final Logger LOG = LoggerFactory.getLogger(OrderController.class);
 
     @Value("${warehouse.service.url}")
@@ -31,38 +39,19 @@ public class OrderController {
         return "Connected !";
     }
 
-//    @RequestMapping("/rest")
-//    public List<Item> restTemplatetest() {
-//        LOG.warn("Test for templateRest ");
-//
-//        RestTemplate restTemplate = new RestTemplate();
-//        String url = "http://localhost:9002/warehouse/items";
-//
-//        ParameterizedTypeReference<List<Item>> ptr = new ParameterizedTypeReference<List<Item>>() {
-//        };
-//        ResponseEntity<List<Item>> response = restTemplate.exchange(url, HttpMethod.GET, null, ptr);
-//
-//        List<Item> itemList = response.getBody();
-//        LOG.warn("Item list size : " + itemList.size());
-//        LOG.warn("Item list : ");
-//        for (Item item : itemList) {
-//            LOG.warn(item.toString());
-//        }
-//        return itemList;
-//    }
+    @Autowired
+    public OrderController(OrderRepository orderRepository, OrderManager orderManager) {
+        this.orderRepository = orderRepository;
+
+        this.orderManager = orderManager;
+    }
 
     @RequestMapping("/items")
     public List<Item> browseItem() {
         LOG.warn("Request on /orders/items");
 
-//        List<Item> items = Warehouse.getItems();
-//        if (items != null) {
-//            return items;
-//        }
-//        return new ArrayList<Item>();
-
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://"+WAREHOUSE_SERVICE_URL+"/warehouse/items";
+        String url = "http://" + WAREHOUSE_SERVICE_URL + "/warehouse/items";
 
         ParameterizedTypeReference<List<Item>> ptr = new ParameterizedTypeReference<List<Item>>() {
         };
@@ -81,11 +70,11 @@ public class OrderController {
     public Order createOrder(@RequestBody Order order) {
         LOG.warn("POST Request on /orders/");
         LOG.warn("Passed object  : " + order.toString());
-        OrderManager.addOrder(order);
+        this.orderManager.addOrder(order);
 
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<Order> request = new HttpEntity<Order>(order);
-        ResponseEntity<String> response = restTemplate.exchange("http://"+WAREHOUSE_SERVICE_URL+ "/warehouse/orders", HttpMethod.POST, request, String.class);
+        ResponseEntity<String> response = restTemplate.exchange("http://" + WAREHOUSE_SERVICE_URL + "/warehouse/orders", HttpMethod.POST, request, String.class);
 
         return order;
     }
@@ -93,11 +82,11 @@ public class OrderController {
     @PostMapping("/")
     public Order createNewOrder(@RequestBody List<Item> items) {
         Order order = OrderManager.createOrder(items);
-        OrderManager.addOrder(order);
+        this.orderManager.addOrder(order);
 
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<Order> request = new HttpEntity<Order>(order);
-        ResponseEntity<String> response = restTemplate.exchange("http://"+WAREHOUSE_SERVICE_URL+ "/warehouse/orders", HttpMethod.POST, request, String.class);
+        ResponseEntity<String> response = restTemplate.exchange("http://" + WAREHOUSE_SERVICE_URL + "/warehouse/orders", HttpMethod.POST, request, String.class);
 
         return order;
     }
@@ -113,13 +102,30 @@ public class OrderController {
     @GetMapping("/")
     public List<Order> getOrders() {
         LOG.warn("GET Request on /orders/");
-        return OrderManager.getOrders();
+        return this.orderManager.getOrders();
     }
 
     @GetMapping("/{id}")
-    public Order getOrders( @PathVariable Integer id) {
+    public Order getOrders(@PathVariable Integer id) {
         LOG.warn("GET Request on /orders/");
-        return OrderManager.getOrderById(id);
+        return this.orderManager.getOrderById(id);
+    }
+
+    @GetMapping("/addToBd/{id}")
+    public void addToBd(@PathVariable Integer id) {
+        Object thing = orderRepository.save(new Order(id, 1));
+        LOG.warn(thing.toString());
+    }
+
+    @GetMapping("/getAllBd")
+    public void getAllBd() {
+        List<Order> thing = orderRepository.findAll();
+        LOG.warn(thing.toString());
+    }
+
+    @DeleteMapping("/")
+    public void deleteOrders() {
+        orderManager.resetOrders();
     }
 
 }

@@ -2,12 +2,12 @@ package com.scp.dronizone.entities;
 //
 //import javax.persistence.Entity;
 //import javax.persistence.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.Objects;
 import java.util.UUID;
 
-//@Entity
 public class Customer {
-//    @Id
     String idCustomer;
     String name;
     String nickname;

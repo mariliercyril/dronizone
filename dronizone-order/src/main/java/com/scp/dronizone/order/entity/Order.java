@@ -1,17 +1,28 @@
 package com.scp.dronizone.order.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.scp.dronizone.order.states.ProcessingState;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Document(collection = "order")
 public class Order {
     Customer customer;
 
     ProcessingState processingState;
+    @Id
+    @Field("order_id")
     int idOrder;
+
+    @Field("order_items")
     List<Item> items = new ArrayList<>();
+
+    @Field("order_price")
     float price;
 
     public Order() {
