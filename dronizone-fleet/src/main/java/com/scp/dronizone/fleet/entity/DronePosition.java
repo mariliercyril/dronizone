@@ -1,17 +1,31 @@
 package com.scp.dronizone.fleet.entity;
 
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Field;
+
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Random;
 
 public class DronePosition {
+    @Id
+    private String mongoId;
+
+    @Field("drone_id")
+    private int droneId;
+
     private Long timestamp;
     private Double longitude;
     private Double latitude;
 
     public DronePosition() {
+
+    }
+
+    public DronePosition(int droneId) {
         this.random();
+        this.droneId = droneId;
     }
 
     public Long getTimestamp() {
@@ -35,6 +49,13 @@ public class DronePosition {
         this.latitude = latitude;
     }
 
+    public int getDroneId() {
+        return droneId;
+    }
+    public void setDroneId(int droneId) {
+        this.droneId = droneId;
+    }
+
     /**
      * Générer de nouvelles positions GPS
      * @return l'instance
@@ -53,7 +74,7 @@ public class DronePosition {
 
     @Override
     public String toString() {
-        return "[" + this.timestamp.toString() + "] "
+        return "[" + this.droneId + " - " + this.timestamp.toString() + "] "
                 + "(" + this.latitude + ", " + this.longitude + ")";
     }
 }

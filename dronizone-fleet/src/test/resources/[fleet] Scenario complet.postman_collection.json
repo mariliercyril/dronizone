@@ -44,7 +44,7 @@
 			"response": []
 		},
 		{
-			"name": "PUT collection ARRAY",
+			"name": "collection ARRAY",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -172,7 +172,7 @@
 			"response": []
 		},
 		{
-			"name": "POST newD",
+			"name": "newD",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -264,7 +264,7 @@
 			"response": []
 		},
 		{
-			"name": "GET all",
+			"name": "all",
 			"event": [
 				{
 					"listen": "test",
@@ -294,6 +294,17 @@
 						],
 						"type": "text/javascript"
 					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d9ce3432-dba3-4040-a9b9-b7043d90db18",
+						"exec": [
+							"// parfois, ça fail car cette requête arrive trop vite...\r",
+							"setTimeout(function(){}, 500);"
+						],
+						"type": "text/javascript"
+					}
 				}
 			],
 			"request": {
@@ -314,26 +325,13 @@
 			"response": []
 		},
 		{
-			"name": "Assign random order ID",
+			"name": "Assign random Order",
 			"event": [
 				{
 					"listen": "prerequest",
 					"script": {
 						"id": "d86d3489-b868-4c28-8be4-8dd62d7bf6fe",
 						"exec": [
-							"function makeid(length) {\r",
-							"   var result           = '';\r",
-							"   var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';\r",
-							"   var charactersLength = characters.length;\r",
-							"   for ( var i = 0; i < length; i++ ) {\r",
-							"      result += characters.charAt(Math.floor(Math.random() * charactersLength));\r",
-							"   }\r",
-							"   return result;\r",
-							"}\r",
-							"\r",
-							"let orderid = makeid(8);\r",
-							"\r",
-							"postman.setEnvironmentVariable(\"orderid\", JSON.stringify(orderid));\r",
 							""
 						],
 						"type": "text/javascript"
@@ -367,9 +365,25 @@
 			],
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"orderId\": {{$randomInt}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "localhost:9004/fleet/assign?orderid={{$randomWords}}",
+					"raw": "localhost:9004/fleet/assign?",
 					"host": [
 						"localhost"
 					],
@@ -381,7 +395,8 @@
 					"query": [
 						{
 							"key": "orderid",
-							"value": "{{$randomWords}}"
+							"value": "{{$randomWords}}",
+							"disabled": true
 						}
 					]
 				},
@@ -438,7 +453,7 @@
 			"response": []
 		},
 		{
-			"name": "GET all telemetry by D's ID",
+			"name": "all telemetry by D's ID",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -466,8 +481,8 @@
 							"pm.test(\"response is ok\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
-							"pm.test(\"Le drone a livré (5 bonds).\", function () {",
-							"    pm.expect(telemetry.length).to.equal(5);",
+							"pm.test(\"Le drone a livré (5 bonds mini).\", function () {",
+							"    pm.expect(telemetry.length >= 5).to.be.true;",
 							"});"
 						],
 						"type": "text/javascript"

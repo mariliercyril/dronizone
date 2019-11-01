@@ -2,6 +2,9 @@ package com.scp.dronizone.fleet.entity;
 
 import com.scp.dronizone.fleet.states.DroneBatteryState;
 import com.scp.dronizone.fleet.states.DroneState;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -9,14 +12,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.lang.Thread.MIN_PRIORITY;
 
+@Document(collection = "drone")
 public class Drone implements Runnable {
     // @Value("${fleet.service.url}")  // ne marche pas donc VERSION SALASSE
     // (on va faire semblant qu'il est important qu'il soit possible d'update l'@ FLEET_SERVICE_URL des Drones via une requête :^)))))))))))))))))))))))
     public String FLEET_SERVICE_URL;// = "localhost:9004";
 
+    @Id
+    private String mongoId;
+
     /**
      * Identifiant unique du Drone
      */
+    @Field("drone_id")
     private int id;
 
     /**
@@ -34,16 +42,21 @@ public class Drone implements Runnable {
 
     private DronePosition position;
 
+
     public Drone() {
-        this.id = DroneManager.counter.incrementAndGet();
+        this(69); // Nice.
+    }
+
+    public Drone(int id) {
+        this.id = id;
         this.batteryState = DroneBatteryState.FULL;
         this.status = DroneState.AVAILABLE;
         this.order = null;
-        this.position = new DronePosition();
+        this.position = new DronePosition(id);
+        this.position.setDroneId(id);
     }
     public Drone(DroneBatteryState batteryLevel, DroneState droneStatus) {
-        this();
-        this.id = new AtomicInteger().incrementAndGet();
+        //this();
         this.batteryState = batteryLevel;
         this.status = droneStatus;
     }
@@ -57,10 +70,11 @@ public class Drone implements Runnable {
      * @param droneStatus Status du Drone
      */
     public Drone(int id, DroneBatteryState batteryLevel, DroneState droneStatus) {
-        this();
-        this.id = id;
+        this(id);
         this.batteryState = batteryLevel;
         this.status = droneStatus;
+        this.position = new DronePosition(id);
+        this.position.setDroneId(id);
     }
 
     public Integer getId() {
@@ -69,6 +83,7 @@ public class Drone implements Runnable {
 
     public void setId(Integer id) {
         this.id = id;
+        position.setDroneId(id);
     }
 
     public DroneBatteryState getBatteryState() {
@@ -146,7 +161,6 @@ public class Drone implements Runnable {
         this.position = position;
     }
 
-    // fusionner avec le setter ? potentiellement ok car pas de modification des données ("you get what you set")
     /**
      * Affecter un colis (Order) au Drone
      * Ceci a pour effet de l'expédier (DELIVERING)
@@ -155,14 +169,6 @@ public class Drone implements Runnable {
     public void assignOrder(Order assignedOrder) {
         this.setOrder(assignedOrder);
         this.updateStatus(DroneState.DELIVERING);
-        // todo thread à part pour "livrer" (5 changements de positions,
-        //  à 3/5 -> informer que le Drone arrive bientôt
-        //  à 5/5 -> livraison terminée => AVAILABLE (BATTERY--)
-
-        System.out.println("Drone #" + this.id + "'s FLEET_SERVICE_URL -> " + FLEET_SERVICE_URL );
-        System.out.println("Drone #" + this.id + "'s FLEET_SERVICE_URL -> " + FLEET_SERVICE_URL );
-        System.out.println("Drone #" + this.id + "'s FLEET_SERVICE_URL -> " + FLEET_SERVICE_URL );
-        System.out.println("Drone #" + this.id + "'s FLEET_SERVICE_URL -> " + FLEET_SERVICE_URL );
 
         new Thread(this).start();
     }
@@ -170,8 +176,8 @@ public class Drone implements Runnable {
     @Override
     public String toString() {
         return "Drone #" + id
-                + ": \nBattery state: " + batteryState
-                + "\nDrone status: " + status;
+                + ": Battery state: " + batteryState
+                + ", Status: " + status;
     }
 
     /**
@@ -184,8 +190,19 @@ public class Drone implements Runnable {
         // todo check Thread.currentThread().isInterrupted() pour arrêter la livraison en cas de retour forcé
         // pas sûr le Thread est réellement KILL, il me semble que oui... (car la variable volatile sert à ça. Ce n'est pas une "pause" mais bien une "fin")
         // continue processing
-        while (progress-- > 0 && !Thread.currentThread().isInterrupted() && this.status!=DroneState.FORCED_RETURNING) {
+        while (progress-- > 0 && !Thread.currentThread().isInterrupted() && this.status != DroneState.FORCED_RETURNING) {
             try {
+                // Maintenant  qu'on est en mode BD, le Drone en cours de livraison doit explicitement demander à la BD son "status"
+                // ("est-ce que je suis en "FORCED_RETURNING")
+                // Sinon il faut conserver une références aux Drones en cours de livraison dans DroneManager
+                RestTemplate restTemplate = new RestTemplate();
+                String url = "http://" + FLEET_SERVICE_URL + "/fleet/drones/" + this.id;
+                this.updateStatus(restTemplate.getForEntity(url, Drone.class).getBody().getStatus());
+                System.out.println("Drone #" + id + "status " + status);
+
+                if (this.status == DroneState.FORCED_RETURNING)
+                    break;
+
                 // Nouvelles coordonnées
                 this.position.random();
                 this.postPositionToFleetService();
@@ -196,7 +213,6 @@ public class Drone implements Runnable {
                 if (progress == 1) {
                     // Envoyer la requête de Notification TYPE == WILL_SHORTLY_BE_DELIVERED
                     postNotificationToFleetService(new Notification(order.orderId, Notification.Type.WILL_SHORTLY_BE_DELIVERED));
-
                 }
 
                 // 1 seconde entre deux déplacements
@@ -216,26 +232,43 @@ public class Drone implements Runnable {
             this.setOrder(null);
             this.updateStatus(DroneState.AVAILABLE);
         }
+        // MàJ la BD
+        postUpdatedPropertiesToFleetService();
     }
 
     /**
      * US#8-9 - Telemetry
-     * todo reproduire le test de PostMan
      */
-    public void postPositionToFleetService() {
+    private void postPositionToFleetService() {
         String url = "http://" + FLEET_SERVICE_URL + "/fleet/drones/" + this.id + "/positions";
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.postForEntity(url, this.position, String.class);
     }
 
-    public void postNotificationToFleetService(Notification notification) {
+    /**
+     * Envoyer une Notification à FleetService pour être envoyée au destinataire
+     *
+     * @param notification Notification à envoyer
+     */
+    private void postNotificationToFleetService(Notification notification) {
         RestTemplate restTemplate = new RestTemplate();
         String postNotifToFleetUrl = "http://" + FLEET_SERVICE_URL + "/fleet/notifications";
-        System.out.println("postNotifToFleetUrl: \n\n\n" + postNotifToFleetUrl + "\n\n\n");
+        System.out.println("Le Drone #" + id + " envoie une notification '" + notification.getType() + "'");
 
-        ResponseEntity responseEntity = restTemplate.postForEntity(postNotifToFleetUrl, notification, String.class);
+        try {
+            ResponseEntity responseEntity = restTemplate.postForEntity(postNotifToFleetUrl, notification, String.class);
+        } catch (Exception e) {
+            System.out.println("Il y a eu un problème lors de la transmission de la notification.\n" + e.getMessage() );
+        }
+    }
 
-        System.out.println("responseEntity: " + responseEntity);
-        System.out.println("responseEntity.getStatusCode(): " + responseEntity.getStatusCode());
+    /**
+     * Envoyer à FleetService ses nouvelles valeurs d'attributs pour MàJ la BD
+     */
+    private void postUpdatedPropertiesToFleetService() {
+        RestTemplate restTemplate = new RestTemplate();
+        String putUpdateDroneToFleetUrl = "http://" + FLEET_SERVICE_URL + "/fleet/drones/" + this.id;
+
+        restTemplate.put(putUpdateDroneToFleetUrl, this, String.class);
     }
 }

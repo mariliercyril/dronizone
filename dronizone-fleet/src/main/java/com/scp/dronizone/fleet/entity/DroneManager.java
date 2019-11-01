@@ -1,35 +1,34 @@
 package com.scp.dronizone.fleet.entity;
 
+import com.scp.dronizone.fleet.repository.DroneRepository;
+import com.scp.dronizone.fleet.repository.DroneTelemetryRepository;
 import com.scp.dronizone.fleet.states.DroneState;
-import com.scp.dronizone.fleet.states.ProcessingState;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * "Fausse" DB de Drones, en attendant mySQL
- *
- * tout en static parce que...
- */
+@Component
 public class DroneManager {
-    public static AtomicInteger counter = new AtomicInteger();
-    static HashMap<Integer, Drone> drones = new HashMap<>();
-    static HashMap<Integer, List<DronePosition>> dronesTelemetry = new HashMap<>();
 
-    public DroneManager() {
+    private DroneRepository droneRepository;
+    private DroneTelemetryRepository telemetryRepository;
+
+    @Autowired
+    public DroneManager(DroneRepository droneRepository, DroneTelemetryRepository telemetryRepository) {
+        this.droneRepository = droneRepository;
+        this.telemetryRepository = telemetryRepository;
     }
 
     /**
      * Récupérer un Drone via son ID
      *
-     * @param {Integer} id
-     *  ID du drone à récupérer
+     * @param id ID du drone à récupérer
      *
-     * @return {Drone|null}
-     *  le Drone recherché ou null s'il n'existe pas dans la "BD" (HashMap)
+     * @return le Drone recherché ou null s'il n'existe pas dans la BD
      */
-    public static Drone getDroneById(Integer id) {
-        return drones.get(id);
+    public Optional<Drone> getDroneById(Integer id) {
+        return droneRepository.findDroneById(id);
     }
 
     /**
@@ -38,24 +37,21 @@ public class DroneManager {
      * @return {Collection<Drone>}
      *  L'ensemble de la DB sous forme de collection
      */
-    public static Collection<Drone> getAllDrones() {
-        return drones.values();
+    public Collection<Drone> getAllDrones() {
+        return droneRepository.findAll();
     }
 
     /**
      * Ajouter un Drone à la BD
      *
-     * @param {Drone} drone
-     *  le Drone à ajouter à la BD
+     * @param drone le Drone à ajouter à la BD
+     *
      * @throws Exception
      */
-    public static Drone registerNewDrone(Drone drone) throws Exception {
-        if (drones.get(drone.getId()) == null) {
-            drones.put(drone.getId(), drone);
-            dronesTelemetry.put(
-                    drone.getId(),
-                    new LinkedList(Arrays.asList(drone.getPosition()))
-            );
+    public Drone registerNewDrone(Drone drone) throws Exception {
+        if (!droneRepository.findDroneById(drone.getId()).isPresent()) {
+            droneRepository.insert(drone);
+            telemetryRepository.insert(drone.getPosition());
             return drone;
         }
         else
@@ -63,107 +59,172 @@ public class DroneManager {
     }
 
     /**
+     * `.save` un Drone, ce qui permet de PUT/UPDATE un Drone dans la BD
+     *
+     * @param drone le Drone à sauvegarder/MàJ dans la BD
+     *
+     * @return le Drone ainsi sauvegardé/MàJ
+     */
+    public Drone putOrUpdateDrone(Drone drone) {
+        // save ne remplace pas, c'est à nous de manuellement supprimer
+        if (droneRepository.findDroneById(drone.getId()).isPresent())
+            droneRepository.deleteByDroneId(drone.getId());
+
+        telemetryRepository.save(drone.getPosition());
+        return droneRepository.save(drone);
+    }
+
+    /**
+     * Change l'état de batterie d'un Drone, s'il existe dans la BD
+     *
+     * Flemme de recopier ça deux fois donc j'en fait une fonction
+     *  (pas d'imagination pour une route autre que POST... mais quelque chose comme "/set?attr=&value=" ou je sais pas...
+     *
+     * @param id ID du drone à récupérer
+     *
+     * @param newState nouvel état
+     *
+     * @return le Drone
+     */
+    public Drone updateDroneStateAttribute(int id, DroneState newState) throws Exception {
+        Optional<Drone> drone = droneRepository.findDroneById(id);
+        if (drone.isPresent()) {
+            drone.get().setStatus(newState);
+            return droneRepository.save(drone.get());
+        } else
+            throw new Exception("Drone #" + id + " not found");
+    }
+    /**
+     * Passer un Drone en mode RECHARGING
+     * todo pour l'US#4
+     *  et potentiellement US#5 aussi
+     *  Envisager de trigger une MàJ du niveau de batterie lors du changement de cet attr, etc...
+     *
+     *
+     * @param id ID du drone à récupérer
+     *
+     * @return le Drone
+     */
+    public Drone deactivateDrone(int id) throws Exception {
+        return updateDroneStateAttribute(id, DroneState.RECHARGING);
+    }
+    public Drone activateDrone(int id) throws Exception {
+        return updateDroneStateAttribute(id, DroneState.AVAILABLE);
+    }
+
+    /**
      * Vider la HashMap servant de DB
      * pour les Tests
      */
-    public static void resetDrones() {
-        drones.clear();
+    public void resetDrones() {
+        droneRepository.deleteAll();
     }
     /**
      * Vider la HashMap servant de BD de télémétrie
      */
-    public static void resetDronesTelemetry() {
-        dronesTelemetry.clear();
+    public void resetDronesTelemetry() {
+        telemetryRepository.deleteAll();
     }
 
-    public static Collection<Drone> setAllDrones(Iterable<Drone> newDrones) {
-
-        System.out.println("type of newDrones --> " + newDrones.getClass().getSimpleName() );
-
-        if (!(newDrones instanceof HashMap))
-            for (Drone drone:newDrones) {
-                System.out.println("\n");
-                System.out.println(drone);
-            }
-
-        // On reçoit un ArrayList de Drone, on les stock
-        if (newDrones instanceof ArrayList) {
-            HashMap<Integer, Drone> newBD = new HashMap<>();
-            for (Drone drone: newDrones) {
-                newBD.put(drone.getId(), drone);
-            }
-            // todo BD et pas static
-            drones = newBD;
+    /**
+     * Empties the DB then insert all given data
+     *
+     * @param newDrones iterable set of new Drones
+     *
+     * @return the new DB
+     */
+    public Collection<Drone> setAllDrones(Iterable<Drone> newDrones) {
+        droneRepository.deleteAll();
+        // droneRepository.insert(newDrones);
+        for (Drone d : newDrones) {
+            putOrUpdateDrone(d);
+            // telemetryRepository.insert(d.getPosition());
         }
 
         return getAllDrones();
     }
 
-
     /**
      * Rappeler tous les Drones actuellement en cours de livraison pour cause urgente (US#5)
      *  pour US#5
      */
-    public static void recallAllActiveDrones() {
-        for (Map.Entry<Integer, Drone> entry : drones.entrySet()) {
-            if (DroneState.DELIVERING == entry.getValue().getStatus()) {
-                entry.getValue().forceRecall(); // une fonction à part car, pour l'US#6, le Drone doit notifier le Client
-                System.out.println("Drone #" + entry.getKey() + " was recalled from its delivery and is now " + entry.getValue().getStatus());
-            }
+    public void recallAllActiveDrones() {
+        Iterable<Drone> deliveringDrones = droneRepository.findAllDronesByDroneState(DroneState.DELIVERING);
+        for (Drone drone : deliveringDrones) {
+            // thread
+            drone.forceRecall();    // ne fait rien
+            // update DB
+            droneRepository.save(drone);
+
+            System.out.println("Drone #" + drone.getId() + " was recalled from its delivery and is now " + drone.getStatus());
         }
     }
 
     /**
      * Tente de trouver un Drone disponible pour une livraison
+     *
      * @return un drone avec le status AVAILABLE
+     *
      * @throws Exception si aucun Drone n'est actuellement disponible
      */
-    public static Drone getOneAvailableDrone() throws Exception {
-        Drone availableDrone = null;
-        for (Map.Entry<Integer, Drone> droneEntry: drones.entrySet()) {
-            if (droneEntry.getValue().getStatus() == DroneState.AVAILABLE)  // inclure ceux RECHARGING ?
-                return availableDrone = droneEntry.getValue();
-        }
-        throw new Exception("No available Drone was found. Try again later"); // todo file d'attente ou refaire la requête ou, au moins, informer le fail via un 500
-    }
-    /**
-     * Affecte un Order
-     * @param order ID de l'Order à affecter au Drone
-     * @param droneId ID du Drone à qui l'on souhaite affecter l'Order
-     * @return le Drone à qui l'on a affecter l'Order
-     */
-    public static Drone assignOrderIdToDroneById(Order order, int droneId, String fleetServiceUrl) {
-        Drone drone = getDroneById(droneId);
-        drone.setFLEET_SERVICE_URL(fleetServiceUrl);
-        drone.assignOrder(order);
+    public Drone getOneAvailableDrone() throws Exception {
+        Iterable<Drone> availableDrones = droneRepository.findAllDronesByDroneState(DroneState.AVAILABLE);
+
+        Drone drone;
+        if (availableDrones.iterator().hasNext())
+            drone = availableDrones.iterator().next();
+        else
+            throw new Exception("No available Drone was found. Try again later"); // todo file d'attente ou refaire la requête ou, au moins, informer le fail via un 500
+
+        System.out.println("availableDrone: " + drone);
+        System.out.println("availableDrone: " + drone);
+        System.out.println("availableDrone: " + drone);
+        System.out.println("availableDrone: " + drone);
+        System.out.println("availableDrone: " + drone);
+        System.out.println("availableDrone: " + drone);
+
         return drone;
     }
 
+    /**
+     * Affecte un Order
+     *
+     * @param order ID de l'Order à affecter au Drone
+     *
+     * @param droneId ID du Drone à qui l'on souhaite affecter l'Order
+     *
+     * @return le Drone à qui l'on a affecter l'Order
+     */
+    public Drone assignOrderIdToDroneById(Order order, int droneId, String fleetServiceUrl) throws Exception {
+        Optional<Drone> drone = getDroneById(droneId);
+        if (drone.isPresent()) {
+            drone.get().setFLEET_SERVICE_URL(fleetServiceUrl);
+            drone.get().assignOrder(order);
+            // sauvegarder le passage en mode "DELIVERING"
+            return droneRepository.save(drone.get());
+        } else
+            throw new Exception("Drone #" + droneId + " not found");
+    }
 
     /**
      * Enregistrer une nouvelle Position
+     *
      * @param position nouvelle position à enregistrer
+     *
      * @return la position enregistrée
      */
-    public static DronePosition logNewDronePosition(Integer droneId, DronePosition position) {
-        // Pas de vérification ? On suppose qu'on peut LOG des positions sans
-        if (dronesTelemetry.containsKey(droneId))
-            dronesTelemetry.get(droneId).add(position);
-        else
-            dronesTelemetry.put(droneId, new LinkedList(Arrays.asList(position)));
-        return position;
+    public DronePosition logNewDronePosition(DronePosition position) {
+        return telemetryRepository.insert(position);
     }
 
     /**
      * Récupérer l'ensemble
+     *
      * @param droneId ID du Drone dont on veut la télémétrie
+     *
      * @return l'ensemble de la télémétrie du Drone
      */
-    // todo Faut-il ne récupérer QUE jusqu'à 5 ans max ? (si oui, loop en partant de la fin et check le timestamp de la position)
-    public static DronePosition[] getDronePositions(Integer droneId) throws Exception {
-        if (!dronesTelemetry.containsKey(droneId))
-            throw new Exception("No entry for this Drone ID (" + droneId + ")");
-        List records = dronesTelemetry.get(droneId);
-        return (DronePosition[]) records.toArray(new DronePosition[records.size()]);
+    public DronePosition[] getDronePositions(Integer droneId) throws Exception {
+        return telemetryRepository.findAllTelemetryByDroneId(droneId);
     }
 }

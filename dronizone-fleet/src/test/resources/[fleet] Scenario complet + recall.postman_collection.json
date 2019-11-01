@@ -314,7 +314,7 @@
 			"response": []
 		},
 		{
-			"name": "Assign random order ID",
+			"name": "Assign random Order",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -367,9 +367,25 @@
 			],
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"orderId\": {{$randomInt}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "localhost:9004/fleet/assign?orderid={{$randomWords}}",
+					"raw": "localhost:9004/fleet/assign?",
 					"host": [
 						"localhost"
 					],
@@ -381,7 +397,8 @@
 					"query": [
 						{
 							"key": "orderid",
-							"value": "{{$randomWords}}"
+							"value": "{{$randomWords}}",
+							"disabled": true
 						}
 					]
 				},
@@ -466,7 +483,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:9004/fleet/drones/totalrecall",
+					"raw": "localhost:9004/fleet/drones/recall",
 					"host": [
 						"localhost"
 					],
@@ -474,7 +491,7 @@
 					"path": [
 						"fleet",
 						"drones",
-						"totalrecall"
+						"recall"
 					]
 				}
 			},
