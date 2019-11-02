@@ -91,8 +91,10 @@ public class StepsDefinition {
         // Pas de persistence, je crée le Drone ici (il faut que la route de POST fonctionne du coup..., ce test est semi-stoopid)
         String postDronePathUrl = "/drones";
         RestTemplate restTemplate = new RestTemplate();
-        Drone drone = new Drone();
+        Drone drone = new Drone(droneId);
         drone.setId(droneId);
+
+        System.out.println("\n\n\n\ndrone:" + drone);
 
         // Pas de persistence --> on doit "POST" le Drone pour le test
         // todo ? Préparer la BD nécessaire à tous les scenarios dans le @Before ?

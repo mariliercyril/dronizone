@@ -46,6 +46,7 @@ public class NotificationController implements INotificationService {
 	@Override
 	@PostMapping(value = "/notifications")
 	public ResponseEntity<String> send(@RequestBody Notification notification) {
+		System.out.println("Notification " + notification.getType() + " received for Order #" + notification.getOrderId());
 
 		Long orderId = notification.getOrderId();
 
