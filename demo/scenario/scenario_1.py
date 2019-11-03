@@ -58,8 +58,8 @@ print("---------------------------")
 #Création d'une commande en passant une commande entière
 orderJson = {"items":[{"idItem":123,"price":2.0}],"processingState":"PENDING","customer_id":0,"price":2.0,"delivery_address":"Université Nice Sophia"}
 print("En tant que client, je cree une nouvelle commande")
-print("Route HTTP : "+order_service_url+"/new, parametre : "+json.dumps(orderJson))
-r=requests.post(order_service_url+"/new",data=json.dumps(orderJson), headers=headers)
+print("Route HTTP : "+order_service_url+"new, parametre : "+json.dumps(orderJson))
+r=requests.post(order_service_url+"new",data=json.dumps(orderJson), headers=headers)
 orderJson = json.loads(r.text) #recuperation de la commande cree et enregistrer
 print("Reponse : "+r.text)
 print("L'id de la commande est " + str(orderJson["orderId"]))
