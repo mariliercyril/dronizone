@@ -38,9 +38,19 @@ public class OrderManager {
         }
     }
 
-    public void addOrder(Order newOrder) {
+    public Order addOrder(Order newOrder) {
+        if(newOrder.getOrderId() == 0){
+            newOrder.setOrderId((int)this.getNbOrder()+1);
+        }else{
+            Optional<Order> optionalOrder = this.orderRepository.findByOrderId(newOrder.getOrderId());
+            if(optionalOrder.isPresent()){
+                return null;
+            }
+        }
+
         this.orderRepository.save(newOrder);
         orders.add(newOrder);
+        return newOrder;
     }
 
     public List<Order> getOrders() {

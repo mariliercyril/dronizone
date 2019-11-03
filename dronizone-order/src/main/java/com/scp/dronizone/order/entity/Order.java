@@ -15,7 +15,10 @@ public class Order {
     @Id
     String id;
 
-    Customer customer;
+    @Field("customer_id")
+    @JsonProperty("customer_id")
+    private int customerId;
+
     @Field("order_status")
     ProcessingState processingState;
     @Field("order_id")
@@ -26,6 +29,10 @@ public class Order {
 
     @Field("order_price")
     float price;
+
+    @Field("delivery_address")
+    @JsonProperty("delivery_address")
+    private String deliveryAddress;
 
     public Order() {
     }
@@ -80,10 +87,25 @@ public class Order {
         this.processingState = processingState;
     }
 
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
 
     public void addItem(Item newItem) {
         items.add(newItem);
         this.price += newItem.getPrice();
+    }
+
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
     }
 
     @Override

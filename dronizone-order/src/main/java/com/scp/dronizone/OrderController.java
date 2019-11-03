@@ -72,7 +72,7 @@ public class OrderController {
         LOG.warn("Passed object  : " + order.toString());
 //        this.orderManager.addOrder(order);
 
-        orderRepository.save(order);
+        this.orderManager.addOrder(order);
 
         try {
             RestTemplate restTemplate = new RestTemplate();
