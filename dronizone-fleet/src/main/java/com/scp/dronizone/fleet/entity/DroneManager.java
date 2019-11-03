@@ -74,8 +74,19 @@ public class DroneManager {
      */
     public Drone putOrUpdateDrone(Drone drone) {
         // save ne remplace pas, c'est à nous de manuellement supprimer
-        if (droneRepository.findDroneById(drone.getId()).isPresent())
+        Optional<Drone> optionalDrone = droneRepository.findDroneById(drone.getId());
+        if (optionalDrone.isPresent()){
+            Drone registeredDrone = optionalDrone.get();
+            if(registeredDrone.getOrder() != null){
+                Order order = registeredDrone.getOrder();
+                Query query = new Query();
+                query.addCriteria(Criteria.where("order_id").is(order.getOrderId()));
+                Update update = new Update();
+                update.set("order_status", ProcessingState.DELIVERED);
+                mongoTemplate.updateFirst(query, update, Order.class);
+            }
             droneRepository.deleteByDroneId(drone.getId());
+        }
 
         telemetryRepository.save(drone.getPosition());
         return droneRepository.save(drone);
