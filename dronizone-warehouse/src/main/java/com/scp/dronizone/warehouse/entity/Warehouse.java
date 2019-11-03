@@ -26,8 +26,8 @@ public class Warehouse {
         itemRepository.saveAll(newItems);
     }
 
-    public void addItem(Item newItem) {
-        itemRepository.save(newItem);
+    public Item addItem(Item newItem) {
+        return itemRepository.save(newItem);
     }
 
     public void resetItems() {

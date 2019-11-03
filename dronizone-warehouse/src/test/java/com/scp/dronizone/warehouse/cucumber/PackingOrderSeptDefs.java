@@ -1,14 +1,10 @@
 package com.scp.dronizone.warehouse.cucumber;
 
-import com.scp.dronizone.warehouse.entity.Item;
 import com.scp.dronizone.warehouse.entity.Order;
-import com.scp.dronizone.warehouse.entity.OrderManager;
-import com.scp.dronizone.warehouse.repository.OrderRepository;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
@@ -54,7 +50,7 @@ public class PackingOrderSeptDefs {
     @Then("^: The server will respond with (\\d+) order with id (\\d+)$")
     public void a_new_order_with_the_item_has_been_added(int nbOrder, int idOrder) throws Exception {
         assertEquals(nbOrder,orders.size());
-        assertEquals(idOrder,orders.get(0).getIdOrder());
+        assertEquals(idOrder,orders.get(0).getOrderId());
     }
 
 

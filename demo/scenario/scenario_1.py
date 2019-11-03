@@ -47,30 +47,30 @@ print("Route HTTP : "+order_service_url+", parametre : "+json.dumps(articleJsonL
 r=requests.post(order_service_url,data=json.dumps(articleJsonList), headers=headers)
 orderJson = json.loads(r.text) #recuperation de la commande cree et enregistrer
 print("Reponse : "+r.text)
-print("L'id de la commande est " + str(orderJson["idOrder"]))
+print("L'id de la commande est " + str(orderJson["orderId"]))
 
 print("---------------------------")
 
 #Verification de l'etat de la commande
 print("En tant que client, je veux verifier que ma commande a bien ete creee")
-print("Route HTTP : "+order_service_url+str(orderJson["idOrder"]))
-r=requests.get(order_service_url+str(orderJson["idOrder"]))
+print("Route HTTP : "+order_service_url+str(orderJson["orderId"]))
+r=requests.get(order_service_url+str(orderJson["orderId"]))
 print("Reponse : "+r.text)
 
 print("---------------------------")
 
 # Affichage des commandes en attente de preparation
 print("En tant que gerant du stock, je veux savoir quel sont les commandes à preparer")
-print("Route HTTP : "+warehouse_service_url+"orders/orders/")
-r=requests.put(warehouse_service_url+"orders/orders/")
+print("Route HTTP : "+warehouse_service_url+"orders/")
+r=requests.get(warehouse_service_url+"orders/")
 print("Reponse : "+r.text)
 
 print("---------------------------")
 
 # Packing de la nouvelle commande
 print("En tant que gerant du stock, je veux renseigner le fait que la commande a ete emballee et qu'elle peut être recupere par un drone")
-print("Route HTTP : "+warehouse_service_url+"orders/pack/"+str(orderJson["idOrder"]))
-r=requests.put(warehouse_service_url+"orders/pack/"+str(orderJson["idOrder"]))
+print("Route HTTP : "+warehouse_service_url+"orders/pack/"+str(orderJson["orderId"]))
+r=requests.put(warehouse_service_url+"orders/pack/"+str(orderJson["orderId"]))
 print("Reponse : "+r.text)
 
 print("Le service warehouse transmet automatiquement les informations de la commande au service fleet pour qu'il assigne un drone à la commande")
@@ -87,6 +87,6 @@ print("---------------------------")
 
 #Verification de l'etat de la commande
 print("En tant que client, je veux verifier que ma commande est bien en cours de livraison")
-print("Route HTTP : "+order_service_url+str(orderJson["idOrder"]))
-r=requests.get(order_service_url+str(orderJson["idOrder"]))
+print("Route HTTP : "+order_service_url+str(orderJson["orderId"]))
+r=requests.get(order_service_url+str(orderJson["orderId"]))
 print("Reponse : "+r.text)

@@ -12,12 +12,14 @@ import java.util.Objects;
 
 @Document(collection = "order")
 public class Order {
-    Customer customer;
-
-    ProcessingState processingState;
     @Id
+    String id;
+
+    Customer customer;
+    @Field("order_status")
+    ProcessingState processingState;
     @Field("order_id")
-    int idOrder;
+    int orderId;
 
     @Field("order_items")
     List<Item> items = new ArrayList<>();
@@ -29,7 +31,7 @@ public class Order {
     }
 
     public Order(int idOrder, float price) {
-        this.idOrder = idOrder;
+        this.orderId = idOrder;
         this.price = price;
     }
 
@@ -38,20 +40,20 @@ public class Order {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return idOrder == order.idOrder;
+        return orderId == order.orderId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idOrder);
+        return Objects.hash(orderId);
     }
 
-    public int getIdOrder() {
-        return idOrder;
+    public int getOrderId() {
+        return orderId;
     }
 
-    public void setIdOrder(int idOrder) {
-        this.idOrder = idOrder;
+    public void setOrderId(int idOrder) {
+        this.orderId = idOrder;
     }
 
     public List<Item> getItems() {
@@ -88,7 +90,7 @@ public class Order {
     public String toString() {
         return "Order{" +
                 "processingState=" + processingState +
-                ", idOrder=" + idOrder +
+                ", idOrder=" + orderId +
                 ", price=" + price +
                 '}';
     }

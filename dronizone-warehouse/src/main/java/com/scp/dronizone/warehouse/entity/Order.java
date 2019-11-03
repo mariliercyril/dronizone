@@ -15,32 +15,32 @@ public class Order {
     @Id
     String id;
 
-    @Field("o_id")
-    int idOrder;
+    @Field("order_id")
+    int orderId;
 
-    @Field("o_price")
+    @Field("order_price")
     double price;
 
-    @Field("o_status")
+    @Field("order_status")
     ProcessingState processingState = ProcessingState.PENDING;
 
     public Order() {
     }
 
     public Order(int idOrder){
-        this.idOrder = idOrder;
+        this.orderId = idOrder;
     }
 
     public Order(double price){
         this.price = price;
     }
 
-    public int getIdOrder() {
-        return idOrder;
+    public int getOrderId() {
+        return orderId;
     }
 
-    public void setIdOrder(int idOrder) {
-        this.idOrder = idOrder;
+    public void setOrderId(int idOrder) {
+        this.orderId = idOrder;
     }
 
     @Override
@@ -48,12 +48,12 @@ public class Order {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return idOrder == order.idOrder;
+        return orderId == order.orderId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idOrder);
+        return Objects.hash(orderId);
     }
 
     public ProcessingState getProcessingState(){

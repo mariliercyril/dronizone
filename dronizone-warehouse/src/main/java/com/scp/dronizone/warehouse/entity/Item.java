@@ -9,8 +9,6 @@ import java.util.Objects;
 @Document(collection = "item")
 public class Item {
     @Id
-    private String id;
-
     @Field("item_id")
     int idItem;
 

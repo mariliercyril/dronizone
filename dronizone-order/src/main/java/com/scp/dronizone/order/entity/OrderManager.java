@@ -31,7 +31,7 @@ public class OrderManager {
 
     public static void setOrderPacked(int idOrder) {
         for (Order order : orders) {
-            if (order.getIdOrder() == idOrder) {
+            if (order.getOrderId() == idOrder) {
                 order.processingState = ProcessingState.PACKED;
                 return;
             }
@@ -71,11 +71,11 @@ public class OrderManager {
         orders = myOrders;
     }
 
-    public static int getNbOrder() {
-        return orders.size();
+    public long getNbOrder() {
+        return orderRepository.count();
     }
 
-    public static Order createOrder(List<Item> items) {
+    public Order createOrder(List<Item> items) {
         Order newOrder = new Order();
         float totalPrice = 0;
 
@@ -85,20 +85,18 @@ public class OrderManager {
 
         newOrder.setItems(items);
         newOrder.setPrice(totalPrice);
-        newOrder.setIdOrder(OrderManager.getNbOrder() + 1);
+        newOrder.setOrderId((int) getNbOrder() + 1);
         newOrder.processingState = ProcessingState.PENDING;
 
         return newOrder;
     }
 
-    public static Order updateOrder(Order orderUpdate) {
-        for (int i = 0; i < orders.size(); i++) {
-            Order order = orders.get(i);
-            if (order.getIdOrder() == orderUpdate.getIdOrder()) {
-                orders.remove(i);
-                orders.add(orderUpdate);
-                return orderUpdate;
-            }
+    public Order updateOrder(Order orderUpdate) {
+        Optional<Order> optionalOrder = orderRepository.findByOrderId(orderUpdate.getOrderId());
+        if(optionalOrder.isPresent()){
+
+            this.orderRepository.save(orderUpdate);
+            return orderUpdate;
         }
         return null;
     }

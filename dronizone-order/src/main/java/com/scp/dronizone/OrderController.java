@@ -70,23 +70,25 @@ public class OrderController {
     public Order createOrder(@RequestBody Order order) {
         LOG.warn("POST Request on /orders/");
         LOG.warn("Passed object  : " + order.toString());
-        this.orderManager.addOrder(order);
+//        this.orderManager.addOrder(order);
 
-        RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<Order> request = new HttpEntity<Order>(order);
-        ResponseEntity<String> response = restTemplate.exchange("http://" + WAREHOUSE_SERVICE_URL + "/warehouse/orders", HttpMethod.POST, request, String.class);
+        orderRepository.save(order);
+
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            HttpEntity<Order> request = new HttpEntity<Order>(order);
+            ResponseEntity<String> response = restTemplate.exchange("http://" + WAREHOUSE_SERVICE_URL + "/warehouse/orders", HttpMethod.POST, request, String.class);
+        }catch (Exception e){
+            LOG.warn("ERROR  : " + e.toString());
+        }
 
         return order;
     }
 
     @PostMapping("/")
     public Order createNewOrder(@RequestBody List<Item> items) {
-        Order order = OrderManager.createOrder(items);
+        Order order = this.orderManager.createOrder(items);
         this.orderManager.addOrder(order);
-
-        RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<Order> request = new HttpEntity<Order>(order);
-        ResponseEntity<String> response = restTemplate.exchange("http://" + WAREHOUSE_SERVICE_URL + "/warehouse/orders", HttpMethod.POST, request, String.class);
 
         return order;
     }
@@ -95,7 +97,7 @@ public class OrderController {
     @PutMapping("/{id}")
     public Order updateOrder(@RequestBody Order order, @PathVariable Integer id) {
         LOG.warn("PUT Request on /orders/{id} with parameter : " + id);
-        Order updateOrder = OrderManager.updateOrder(order);
+        Order updateOrder = this.orderManager.updateOrder(order);
         return updateOrder;
     }
 

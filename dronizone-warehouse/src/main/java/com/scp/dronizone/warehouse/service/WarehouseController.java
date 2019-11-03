@@ -49,9 +49,8 @@ public class WarehouseController {
     }
 
     @PostMapping("/orders")
-    public ResponseEntity.BodyBuilder newOrder(@RequestBody Order order) {
+    public void newOrder(@RequestBody Order order) {
         orderManager.displayPendingOrders();
-        return ResponseEntity.status(HttpStatus.OK);
     }
 
     @GetMapping("/items/{id}")
@@ -61,9 +60,9 @@ public class WarehouseController {
     }
 
     @PostMapping("/items")
-    public ResponseEntity.BodyBuilder addItem(@RequestBody Item item) {
-        warehouse.addItem(item);
-        return ResponseEntity.status(HttpStatus.CREATED);
+    public ResponseEntity<Item> addItem(@RequestBody Item item) {
+        Item newItem = warehouse.addItem(item);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newItem);
     }
 
     @DeleteMapping("/items")
@@ -73,14 +72,18 @@ public class WarehouseController {
     }
 
     @PutMapping("/orders/pack/{idOrder}")
-    public String packOrder(@PathVariable int idOrder) {
+    public Order packOrder(@PathVariable int idOrder) {
         Order order = orderManager.setOrderPacked(idOrder);
 
-        RestTemplate restTemplate_fleet = new RestTemplate();
-        HttpEntity<Order> request_fleet = new HttpEntity<Order>(order);
-        ResponseEntity<String> response_fleet = restTemplate_fleet.exchange("http://"+FLEET_SERVICE_URL+ "/fleet/assign", HttpMethod.POST, request_fleet, String.class);
+        try{
+            RestTemplate restTemplate_fleet = new RestTemplate();
+            HttpEntity<Order> request_fleet = new HttpEntity<Order>(order);
+            ResponseEntity<String> response_fleet = restTemplate_fleet.exchange("http://"+FLEET_SERVICE_URL+ "/fleet/assign", HttpMethod.POST, request_fleet, String.class);
+        }catch (Exception e){
+            LOG.warn("ERROR  : " + e.toString());
+        }
 
-        return "OK";
+        return order;
     }
 
     @GetMapping("/items")

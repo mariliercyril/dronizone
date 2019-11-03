@@ -1,17 +1,27 @@
 package com.scp.dronizone.order.entity;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
 import java.util.Objects;
 
+
+@Document(collection = "item")
 public class Item {
-    String idItem;
-    float price;
+    @Id
+    @Field("item_id")
+    int idItem;
+
+    @Field("item_price")
+    double price;
 
 //    public Item(float price) {
 //        this.idItem = UUID.randomUUID().toString();
 //        this.price = price;
 //    }
 
-    public Item(String idItem) {
+    public Item(int idItem) {
         this.idItem = idItem;
     }
 
@@ -23,7 +33,7 @@ public class Item {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Item item = (Item) o;
-        return idItem.equals(item.idItem);
+        return idItem == item.idItem;
     }
 
     @Override
@@ -31,15 +41,15 @@ public class Item {
         return Objects.hash(idItem);
     }
 
-    public String getIdItem() {
+    public int getIdItem() {
         return idItem;
     }
 
-    public void setIdItem(String idItem) {
+    public void setIdItem(int idItem) {
         this.idItem = idItem;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 
