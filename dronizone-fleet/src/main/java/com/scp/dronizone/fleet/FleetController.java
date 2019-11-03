@@ -7,7 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
@@ -26,6 +29,9 @@ public class FleetController {
 
     @Value("${notification.service.url}")
     String NOTIFICATION_SERVICE_URL;
+
+    @Value("${order.service.url}")
+    String ORDER_SERVICE_URL;
 
     @Autowired
     DroneManager droneManager;
@@ -230,7 +236,9 @@ public class FleetController {
 
         // Trouver un Drone disponible pour une livraison (ne doit pas être en train de se recharger !RECHARGING et ne doit pas déjà être en cours de livraison) ?
         Drone drone = droneManager.getOneAvailableDrone();
-        return droneManager.assignOrderIdToDroneById(order, drone.getId(), FLEET_SERVICE_URL);
+        drone = droneManager.assignOrderIdToDroneById(order, drone.getId(), FLEET_SERVICE_URL);
+
+        return drone;
     }
 
     // todo ajouter une route PUT juste pour init les tests ?

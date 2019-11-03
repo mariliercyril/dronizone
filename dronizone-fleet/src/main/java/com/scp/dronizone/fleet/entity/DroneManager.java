@@ -3,7 +3,12 @@ package com.scp.dronizone.fleet.entity;
 import com.scp.dronizone.fleet.repository.DroneRepository;
 import com.scp.dronizone.fleet.repository.DroneTelemetryRepository;
 import com.scp.dronizone.fleet.states.DroneState;
+import com.scp.dronizone.fleet.states.ProcessingState;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -13,11 +18,13 @@ public class DroneManager {
 
     private DroneRepository droneRepository;
     private DroneTelemetryRepository telemetryRepository;
+    private MongoTemplate mongoTemplate;
 
     @Autowired
-    public DroneManager(DroneRepository droneRepository, DroneTelemetryRepository telemetryRepository) {
+    public DroneManager(DroneRepository droneRepository, DroneTelemetryRepository telemetryRepository,MongoTemplate mongoTemplate) {
         this.droneRepository = droneRepository;
         this.telemetryRepository = telemetryRepository;
+        this.mongoTemplate = mongoTemplate;
     }
 
     /**
@@ -198,6 +205,13 @@ public class DroneManager {
     public Drone assignOrderIdToDroneById(Order order, int droneId, String fleetServiceUrl) throws Exception {
         Optional<Drone> drone = getDroneById(droneId);
         if (drone.isPresent()) {
+            //Modification du status de la commande
+            Query query = new Query();
+            query.addCriteria(Criteria.where("order_id").is(order.getOrderId()));
+            Update update = new Update();
+            update.set("order_status", ProcessingState.DELIVERING);
+            mongoTemplate.updateFirst(query, update, Order.class);
+
             drone.get().setFLEET_SERVICE_URL(fleetServiceUrl);
             drone.get().assignOrder(order);
             // sauvegarder le passage en mode "DELIVERING"
