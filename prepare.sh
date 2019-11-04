@@ -11,7 +11,7 @@ docker pull scp1920/dronizone:order
 docker pull scp1920/dronizone:warehouse
 docker pull scp1920/dronizone:fleet
 
-docker-compose up -d
+docker-compose -p dronizone1920scp1920 up -d
 
 docker build -t verify_services ./demo/
 

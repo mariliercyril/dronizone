@@ -11,6 +11,11 @@ install:
 before_script:
   - cd dronizone-notification
   - docker-compose up --build -d
+  - cd ..
+  - bash prepare.sh
+
+script:
+  - bash run.sh
 
 notifications:
   email:
