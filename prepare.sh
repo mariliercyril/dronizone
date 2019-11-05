@@ -15,7 +15,7 @@ docker-compose -p dronizone1920scp1920 up -d
 
 docker build -t verify_services ./demo/
 
-docker build -t scenario_1 ./demo/scenario/
+docker build -t scenario_1 ./demo/scenario/scenario_1/
 
 echo Lancement des services...
 

@@ -38,11 +38,12 @@ print("Reponse : "+r.text)
 print("---------------------------")
 
 # Creation d'un drone
-droneJson = {"batteryState":"FULL","status":"AVAILABLE"}
+droneJson = {"batteryState":"FULL","status":"AVAILABLE","id":1}
 print("En tant que gerant des drones, je cree un drone en stipulant son etat (etat de la batterie : pleine, status : disponible")
 print("Route HTTP : "+fleet_service_url+"drones, parametre : "+json.dumps(droneJson))
 r=requests.post(fleet_service_url+"drones",data=json.dumps(droneJson), headers=headers)
 print("Reponse : "+r.text)
+droneJson = json.loads(r.text)
 
 print("---------------------------")
 
@@ -108,8 +109,16 @@ print("Reponse : "+r.text)
 
 print("---------------------------")
 
-print("Attente de 10s que la commande arrive")
-time.sleep(10)
+print("Attente que la commande arrive")
+delivering = True
+while(delivering):
+    r=requests.get(order_service_url+str(orderJson["orderId"]))
+    orderJson = json.loads(r.text)
+    if(orderJson["processingState"] != "DELIVERING"):
+        delivering=False    
+
+print("Le drone prévient le service fleet qu'il est en train de finir sa livraison")
+print("Le service fleet prévient le service notification qu'il doit envoyer une notification au client")
 
 print("---------------------------")
 
@@ -126,3 +135,13 @@ print("En tant que client, je veux verifier que ma commande a bien été livrée
 print("Route HTTP : "+order_service_url+str(orderJson["orderId"]))
 r=requests.get(order_service_url+str(orderJson["orderId"]))
 print("Reponse : "+r.text)
+
+print("---------------------------")
+
+# Verification de l'état des drones
+print("En tant que gerant des drones, je veux savoir quel est l'etat actuel de la batteries de tous les drones")
+print("Route HTTP : "+fleet_service_url+"drones")
+r=requests.get(fleet_service_url+"drones/1")
+print("Reponse : "+r.text)
+droneJson = json.loads(r.text)
+print("Etat de la batterie : "+droneJson["batteryState"])
