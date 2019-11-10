@@ -204,6 +204,17 @@ public class FleetController {
         droneManager.recallAllActiveDrones();
         return "Done."; // 200
     }
+    /**
+     * Indiquer aux Drones FORCED_RETURNNG de recommencer leurs livraisons
+     *
+     * @return "OK"
+     */
+    @GetMapping(path = {"/drones/totalresume", "/drones/resume"})
+    public @ResponseBody String remuseAllDeliveriesAfterAnEmergencyRecall(HttpServletRequest request) {
+        LOG.warn("Request on " + request.getRequestURI() + ((request.getQueryString() == null) ? "" : ("?" + request.getQueryString())));
+        droneManager.resumeAllForcedReturningDrones();
+        return "Done."; // 200
+    }
 
 
     /**

@@ -179,6 +179,21 @@ public class DroneManager {
     }
 
     /**
+     * Renvoyer tous les Drones FORCED_RETURNING à leur livraison
+     */
+    public void resumeAllForcedReturningDrones() {
+        Iterable<Drone> deliveringDrones = droneRepository.findAllDronesByDroneState(DroneState.FORCED_RETURNING);
+        for (Drone drone : deliveringDrones) {
+            // thread
+            drone.assignOrder(drone.getOrder());    // ne fait rien
+            // update DB
+            droneRepository.save(drone);
+
+            System.out.println("Drone #" + drone.getId() + " was sent back to delivery and is now " + drone.getStatus());
+        }
+    }
+
+    /**
      * Tente de trouver un Drone disponible pour une livraison
      *
      * @return un drone avec le status AVAILABLE
