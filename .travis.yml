@@ -1,11 +1,16 @@
+sudo: required
+
 language: java
 
-sudo: true
+services:
+  - docker
 
-before_install:
-  - chmod +x mvnw
+install:
+  - mvn clean install -DskipTests
 
-script: mvn clean package -DskipTests
+before_script:
+  - cd dronizone-notification
+  - docker-compose up --build -d
 
 notifications:
   email:
@@ -14,3 +19,4 @@ notifications:
       - filipe.costa-de-sousa@etu.univ-cotedazur.fr
       - romain.garnier@etu.univ-cotedazur.fr
       - cyril.marilier@etu.univ-cotedazur.fr
+

@@ -5,14 +5,32 @@
 #cd dronizone-order
 #./mvnw exec:java
 
-#cd ../dronizone-warehouse
-#./mvnw exec:java
+#RUN SERVICES
+#docker run -d -p 9001:9001 -t scp1920/dronizone:order
+#docker run -d -p 9002:9002 -t scp1920/dronizone:warehouse
+#docker run -d -p 9003:9003 -t scp1920/dronizone:notification
+#docker run -d -p 9004:9004 -t scp1920/dronizone:fleet
 
+docker run --network=dronizone1920scp1920_dronizone-net scenario_1
+
+docker run --network=dronizone1920scp1920_dronizone-net scenario_2
+
+#sleep 10;
+#cd dronizone-order
+#mvn -Dtest=RunCucumberTest test
 #cd ..
-docker run -d -p 9003:9003 -t scp1920/dronizone:notification
-sleep 10;
-cd dronizone-notification
-gnome-terminal -- ./notification_service_tests_launcher.sh
-
+#
+#sleep 10;
+#cd dronizone-warehouse
+#mvn -Dtest=WarehouseServiceIntegrationTest test
+#cd ..
+#
+#sleep 10;
+#cd dronizone-notification
+#mvn -Dtest=NotificationServiceTest test
+#gnome-terminal -- ./notification_service_tests_launcher.sh
+#cd ..
+#
+#sleep 10;
 #cd dronizone-fleet
-#./mvnw exec:java
+#mvn -Dtest=RunCucumberTest test

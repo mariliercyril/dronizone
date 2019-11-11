@@ -8,10 +8,12 @@
   </parent>
 
   <artifactId>dronizone-notification</artifactId>
+  <description>The Notification Service</description>
 
   <packaging>jar</packaging>
 
   <properties>
+    <info.cukes.version>1.2.5</info.cukes.version>
     <docker.image.prefix>scp1920</docker.image.prefix>
   </properties>
 
@@ -30,23 +32,6 @@
     </testResources>
 
     <plugins>
-      <!-- For executing by Maven -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>java</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <skip>false</skip>
-          <mainClass>com.scp.dronizone.notification.NotificationService</mainClass>
-        </configuration>
-      </plugin>
-
       <!-- Build an executable JAR -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -56,7 +41,7 @@
             <manifest>
               <addClasspath>true</addClasspath>
               <classpathPrefix>lib/</classpathPrefix>
-              <mainClass>com.scp.dronizone.notification.NotificationService</mainClass>
+              <mainClass>com.scp.dronizone.notification.NotificationApplication</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -66,54 +51,57 @@
       <plugin>
         <groupId>com.spotify</groupId>
         <artifactId>dockerfile-maven-plugin</artifactId>
-        <version>1.4.9</version>
+        <version>1.4.13</version>
         <configuration>
           <repository>${docker.image.prefix}/dronizone</repository>
           <tag>notification</tag>
         </configuration>
       </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>unpack</id>
-            <phase>package</phase>
-            <goals>
-              <goal>unpack</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>${project.groupId}</groupId>
-                  <artifactId>${project.artifactId}</artifactId>
-                  <version>${project.version}</version>
-                </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
 
   <dependencies>
-    <!-- For Spring Boot to start data JPA -->
+    <!-- For MongoDB... -->
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-mongodb</artifactId>
+    </dependency>
+    <!-- For testing with MongoDB... -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-jpa</artifactId>
+      <artifactId>spring-boot-starter-data-mongodb</artifactId>
+      <scope>test</scope>
     </dependency>
-    <!-- For the data persistence (with Hibernate...) -->
+    <!-- For testing integration with MongoDB... -->
     <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <scope>runtime</scope>
+      <groupId>de.flapdoodle.embed</groupId>
+      <artifactId>de.flapdoodle.embed.mongo</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <optional>true</optional>
+    </dependency>
+
+    <!-- For Cucumber testing... -->
+    <dependency>
+      <groupId>info.cukes</groupId>
+      <artifactId>cucumber-java</artifactId>
+      <version>${info.cukes.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- For Cucumber testing by JUnit -->
+    <dependency>
+      <groupId>info.cukes</groupId>
+      <artifactId>cucumber-junit</artifactId>
+      <version>${info.cukes.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>info.cukes</groupId>
+      <artifactId>cucumber-picocontainer</artifactId>
+      <version>${info.cukes.version}</version>
     </dependency>
   </dependencies>
 </project>

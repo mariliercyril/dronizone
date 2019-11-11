@@ -1,55 +1,76 @@
 package com.scp.dronizone.notification.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.http.ResponseEntity;
 
-import org.springframework.test.context.ContextConfiguration;
-
 import org.springframework.web.client.RestTemplate;
 
-import com.scp.dronizone.notification.NotificationService;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import com.scp.dronizone.notification.dao.entity.Customer;
-import com.scp.dronizone.notification.dao.entity.CustomerOrder;
-import com.scp.dronizone.notification.dao.entity.CustomerOrderRepository;
-import com.scp.dronizone.notification.dao.entity.CustomerRepository;
+import com.scp.dronizone.notification.NotificationApplication;
+
+import com.scp.dronizone.notification.model.entity.Customer;
+import com.scp.dronizone.notification.model.entity.Notification;
+import com.scp.dronizone.notification.model.entity.Order;
 
 /**
- * The {@code NotificationControllerTest} class allows to test notifications (by a drone) to a customer.
+ * The {@code NotificationControllerTest} class allows to test the <b>notification</b> service.
  * 
  * @author cmarilier
  */
-@ContextConfiguration(classes=NotificationService.class)
-@SpringBootTest
+@SpringBootTest(classes = NotificationApplication.class)
 public class NotificationControllerTest {
 
-	private static final String NOTIFICATION_SERVICE_URL = "http://localhost:9003/drone/delivery/notification";
+	@Value("${server.host}")
+	private String host;
 
-	protected ResponseEntity<?> responseEntity = null;
+	@Value("${server.port}")
+	private String port;
 
-	protected RestTemplate restTemplate = null;
+	private UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl("http://" + host + ":" + port);	
+	private String notificationServiceUri = uriComponentsBuilder.toUriString();
+	//
+	private String uri = "http://localhost:9003";
 
-	protected Customer customer;
-	protected CustomerOrder customerOrder;
+	protected ResponseEntity<String> responseEntity = null;
 
-	protected CustomerOrderRepository customerOrderRepository;
+	@Autowired
+	protected RestTemplate restTemplate;
 
-	protected CustomerRepository customerRepository;
-
-	/**
-	 * Tests the consumption of the notification service...
-	 * 
-	 * @param idOrder
-	 *  the order ID
-	 */
-	protected void consumeNotificationService(String route, String notification) {
+	protected void insertCustomer(Customer customer) {
 
 		if (restTemplate == null) {
 			restTemplate = new RestTemplate();
 		}
 
-		responseEntity = restTemplate.postForEntity(NOTIFICATION_SERVICE_URL + route, notification, String.class);
+		responseEntity = restTemplate.postForEntity(uri + "/customers", customer, String.class);
+	}
+
+	protected void insertOrder(Order order) {
+
+		if (restTemplate == null) {
+			restTemplate = new RestTemplate();
+		}
+
+		responseEntity = restTemplate.postForEntity(uri + "/orders", order, String.class);
+	}
+
+	/**
+	 * Tests the consumption of the notification service...
+	 * 
+	 * @param notification
+	 */
+	protected void send(Notification notification) {
+
+		if (restTemplate == null) {
+			restTemplate = new RestTemplate();
+		}
+
+		responseEntity = restTemplate.postForEntity(uri + "/notifications", notification, String.class);
 	}
 
 }

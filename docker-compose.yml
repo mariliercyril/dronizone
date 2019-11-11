@@ -1,0 +1,71 @@
+version: '3'
+services:
+  warehouse:
+    build:
+      context: ./dronizone-warehouse
+      dockerfile: Dockerfile
+    image: "scp1920/dronizone:warehouse"
+    ports:
+      - "9002:9002"
+    networks:
+    - dronizone-net
+    environment:
+    - DRONIZONE_FLEET_SERVICE_HOST=fleet
+    - DRONIZONE_FLEET_SERVICE_PORT=9004
+    - DRONIZONE_ORDER_SERVICE_HOST=order
+    - DRONIZONE_ORDER_SERVICE_PORT=9001
+    - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/dronizone
+  fleet:
+    build:
+      context: ./dronizone-fleet
+      dockerfile: Dockerfile
+    image: "scp1920/dronizone:fleet"
+    ports:
+      - "9004:9004"
+    networks:
+    - dronizone-net
+    environment:
+      - DRONIZONE_ORDER_SERVICE_HOST=order
+      - DRONIZONE_ORDER_SERVICE_PORT=9001
+      - DRONIZONE_NOTIFICATION_SERVICE_HOST=notification
+      - DRONIZONE_NOTIFICATION_SERVICE_PORT=9003
+      - DRONIZONE_FLEET_SERVICE_HOST=fleet
+      - DRONIZONE_FLEET_SERVICE_PORT=9004
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/dronizone
+  order:
+    build:
+      context: ./dronizone-order
+      dockerfile: Dockerfile
+    image: "scp1920/dronizone:order"
+    ports:
+    - "9001:9001"
+    networks:
+    - dronizone-net
+    environment:
+      - DRONIZONE_WAREHOUSE_SERVICE_HOST=warehouse
+      - DRONIZONE_WAREHOUSE_SERVICE_PORT=9002
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/dronizone
+  notification:
+    build:
+      context: ./dronizone-notification
+      dockerfile: Dockerfile
+    image: "scp1920/dronizone:notification"
+    ports:
+      - "9003:9003"
+    networks:
+      - dronizone-net
+    environment:
+    - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/dronizone
+
+  mongodb:
+    image: mongo:4.0.0
+    container_name: mongodb
+    ports:
+    - 27017:27017
+    command: --smallfiles
+    networks:
+    - dronizone-net
+
+networks:
+  dronizone-net:
+    driver: bridge

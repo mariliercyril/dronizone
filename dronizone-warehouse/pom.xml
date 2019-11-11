@@ -19,33 +19,26 @@
     </properties>
 
   <dependencies>
-      <dependency>
-        <artifactId>common</artifactId>
-        <groupId>${project.groupId}</groupId>
-        <version>0.0.1-SNAPSHOT</version>
-        <scope>system</scope>
-        <systemPath>${project.basedir}/../common/target/common-0.0.1-SNAPSHOT.jar</systemPath>
-      </dependency>
+      <!-- pour les tests avec Spring Boot -->
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-test</artifactId>
         <scope>test</scope>
       </dependency>
+      <!-- pour tester les requêtes HTTP -->
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpcore</artifactId>
       <version>4.4.5</version>
       <scope>test</scope>
     </dependency>
-
-
+      <!-- pour tester des scénarios -->
       <dependency>
           <groupId>io.cucumber</groupId>
           <artifactId>cucumber-java</artifactId>
           <version>${cucumber.version}</version>
           <scope>test</scope>
       </dependency>
-
       <dependency>
           <groupId>io.cucumber</groupId>
           <artifactId>cucumber-junit</artifactId>
@@ -58,6 +51,22 @@
           <version>${cucumber.version}</version>
           <scope>test</scope>
       </dependency>
+      <!-- For MongoDB... -->
+      <dependency>
+          <groupId>org.springframework.data</groupId>
+          <artifactId>spring-data-mongodb</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-data-mongodb</artifactId>
+          <scope>test</scope>
+      </dependency>
+      <!-- For testing integration with MongoDB... -->
+      <dependency>
+          <groupId>de.flapdoodle.embed</groupId>
+          <artifactId>de.flapdoodle.embed.mongo</artifactId>
+      </dependency>
+
   </dependencies>
 
   <build>
@@ -75,7 +84,7 @@
         </executions>
         <configuration>
           <skip>false</skip>
-          <mainClass>com.scp.dronizone.warehouse.service.WarehouseService</mainClass>
+          <mainClass>com.scp.dronizone.warehouse.WarehouseService</mainClass>
         </configuration>
       </plugin>
 
@@ -83,10 +92,10 @@
         <groupId>com.spotify</groupId>
         <artifactId>dockerfile-maven-plugin</artifactId>
         <version>1.4.9</version>
-        <configuration>
-          <repository>${project.groupId}/${project.artifactId}</repository>
-          <tag>${project.version}</tag>
-        </configuration>
+          <configuration>
+              <repository>scp1920/dronizone</repository>
+              <tag>warehouse</tag>
+          </configuration>
       </plugin>
     </plugins>
   </build>
