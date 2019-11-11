@@ -210,7 +210,7 @@ public class FleetController {
      * @return "OK"
      */
     @GetMapping(path = {"/drones/totalresume", "/drones/resume"})
-    public @ResponseBody String remuseAllDeliveriesAfterAnEmergencyRecall(HttpServletRequest request) {
+    public @ResponseBody String resumeAllDeliveriesAfterAnEmergencyRecall(HttpServletRequest request) {
         LOG.warn("Request on " + request.getRequestURI() + ((request.getQueryString() == null) ? "" : ("?" + request.getQueryString())));
         droneManager.resumeAllForcedReturningDrones();
         return "Done."; // 200

@@ -27,6 +27,30 @@ headers = {
      'Accept': 'application/json'
 }
 
+def printJsonOrder(order):
+    try :
+        print("Détail de la commande: ")
+        print("Id : "+str(order["orderId"]))
+        print("Customer id : "+str(order["customer_id"]))
+        print("Price : "+str(order["price"]))
+        print("Status : "+order["processingState"])
+        print("Items : "+str(order["items"]))
+        print("Deliver adress : "+order["delivery_address"])
+    except :
+        a=1
+
+def printJsonDrone(drone):
+    try :
+        print("Détail du drone: ")
+        print("Id : "+str(drone["id"]))
+        print("Battery : "+drone["batteryState"])
+        print("Status : "+drone["status"])
+        if drone["order"] is None :
+            print("Order : None")
+        else :
+            print("Order : "+str(drone["order"]["orderId"]))
+    except :
+        a=1
 
 # Creation d'un article
 articleJson = {"idItem":123,"price":2.0}
@@ -44,6 +68,7 @@ print("Route HTTP : "+fleet_service_url+"drones, parametre : "+json.dumps(droneJ
 r=requests.post(fleet_service_url+"drones",data=json.dumps(droneJson), headers=headers)
 print("Reponse : "+r.text)
 droneJson = json.loads(r.text)
+printJsonDrone(droneJson)
 
 print("---------------------------")
 
@@ -72,6 +97,7 @@ print("En tant que client, je veux verifier que ma commande a bien ete creee")
 print("Route HTTP : "+order_service_url+str(orderJson["orderId"]))
 r=requests.get(order_service_url+str(orderJson["orderId"]))
 print("Reponse : "+r.text)
+printJsonOrder(json.loads(r.text))
 
 print("---------------------------")
 
@@ -80,6 +106,10 @@ print("En tant que gerant du stock, je veux savoir quel sont les commandes à pr
 print("Route HTTP : "+warehouse_service_url+"orders/")
 r=requests.get(warehouse_service_url+"orders/")
 print("Reponse : "+r.text)
+orderList = json.loads(r.text)
+print("Il y a "+str(len(orderList))+" commandes en attente d'emballage")
+for order in orderList :
+    printJsonOrder(order)
 
 print("---------------------------")
 
@@ -88,6 +118,7 @@ print("En tant que gerant du stock, je veux renseigner le fait que la commande a
 print("Route HTTP : "+warehouse_service_url+"orders/pack/"+str(orderJson["orderId"]))
 r=requests.put(warehouse_service_url+"orders/pack/"+str(orderJson["orderId"]))
 print("Reponse : "+r.text)
+printJsonOrder(json.loads(r.text))
 
 print("Le service warehouse transmet automatiquement les informations de la commande au service fleet pour qu'il assigne un drone à la commande")
 
@@ -98,6 +129,10 @@ print("En tant que gerant des drones, je veux savoir quel est l'etat actuel de t
 print("Route HTTP : "+fleet_service_url+"drones")
 r=requests.get(fleet_service_url+"drones")
 print("Reponse : "+r.text)
+dronerList = json.loads(r.text)
+print("Il y a "+str(len(dronerList))+" drones")
+for drone in dronerList :
+    printJsonDrone(drone)
 
 print("---------------------------")
 
@@ -106,6 +141,7 @@ print("En tant que client, je veux verifier que ma commande est bien en cours de
 print("Route HTTP : "+order_service_url+str(orderJson["orderId"]))
 r=requests.get(order_service_url+str(orderJson["orderId"]))
 print("Reponse : "+r.text)
+printJsonOrder(json.loads(r.text))
 
 print("---------------------------")
 
@@ -135,13 +171,15 @@ print("En tant que client, je veux verifier que ma commande a bien été livrée
 print("Route HTTP : "+order_service_url+str(orderJson["orderId"]))
 r=requests.get(order_service_url+str(orderJson["orderId"]))
 print("Reponse : "+r.text)
+printJsonOrder(json.loads(r.text))
 
 print("---------------------------")
 
-# Verification de l'état des drones
+# Verification de l'état du drone
 print("En tant que gerant des drones, je veux savoir quel est l'etat actuel de la batteries de tous les drones")
-print("Route HTTP : "+fleet_service_url+"drones")
+print("Route HTTP : "+fleet_service_url+"drones/1")
 r=requests.get(fleet_service_url+"drones/1")
 print("Reponse : "+r.text)
 droneJson = json.loads(r.text)
-print("Etat de la batterie : "+droneJson["batteryState"])
+printJsonDrone(json.loads(r.text))
+
