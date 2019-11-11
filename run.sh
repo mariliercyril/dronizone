@@ -13,6 +13,8 @@
 
 docker run --network=dronizone1920scp1920_dronizone-net scenario_1
 
+docker run --network=dronizone1920scp1920_dronizone-net scenario_2
+
 #sleep 10;
 #cd dronizone-order
 #mvn -Dtest=RunCucumberTest test

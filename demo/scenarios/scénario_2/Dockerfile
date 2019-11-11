@@ -9,8 +9,8 @@ ENV DRONIZONE_NOTIFICATION_SERVICE_PORT 9003
 ENV DRONIZONE_FLEET_SERVICE_HOST fleet
 ENV DRONIZONE_FLEET_SERVICE_PORT 9004
 
-ADD scenario_1.py /
+ADD scenario_2.py /
 
 RUN pip install requests
 
-CMD [ "python", "./scenario_1.py" ]
+CMD [ "python", "./scenario_2.py" ]
